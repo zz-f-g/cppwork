@@ -1,0 +1,105 @@
+{
+  "main": {
+    "id": "3b5481fa18c90026",
+    "type": "split",
+    "children": [
+      {
+        "id": "dd0f1b04a82871dc",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "basic.md",
+            "mode": "source",
+            "source": false
+          }
+        }
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "76abb541117d82df",
+    "type": "split",
+    "children": [
+      {
+        "id": "6203777b676f3547",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "443da8335582ab60",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {}
+            }
+          },
+          {
+            "id": "3bfb36354d1e24e0",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "39fe24e874a1f9ce",
+    "type": "split",
+    "children": [
+      {
+        "id": "7a6291eba735dcee",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "31a9104d43f85e89",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "basic.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "8a6a6887f2481e93",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "basic.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "active": "dd0f1b04a82871dc",
+  "lastOpenFiles": [
+    "basic.md",
+    "introduction.md"
+  ]
+}
