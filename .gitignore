@@ -1,3 +1,15 @@
+# VS Configuration #
+####################
+homework/.vs
+homework/Debug
+*.sln
+homework/*/Debug
+homework/*/Debug
+*.vcxproj
+*.filters
+*.user
+
+
 # Compiled source #
 ###################
 *.com
@@ -6,6 +18,7 @@
 *.exe
 *.o
 *.so
+*.pdb
 
 # Packages #
 ############
