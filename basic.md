@@ -335,6 +335,3 @@ Physic Storage of Float
 ``sizeof()`` ``typeid().name``
 
 ---
-
-
-IEEE 754
