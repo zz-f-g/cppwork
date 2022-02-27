@@ -1,10 +1,9 @@
 # VS Configuration #
 ####################
-homework/.vs
-homework/Debug
+*/.vs
+*/Debug
 *.sln
-homework/*/Debug
-homework/*/Debug
+*/*/Debug
 *.vcxproj
 *.filters
 *.user
