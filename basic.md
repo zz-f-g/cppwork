@@ -20,9 +20,13 @@
 冯诺依曼架构
 
 ```mermaid
-graph LR
-Input --> CPU --> Output
-Store --> CPU --> Store
+flowchart LR
+    subgraph CPU
+        calculator --> controller
+        controller --> calculator
+    end
+    Input --> CPU --> Output
+    Store --> CPU --> Store
 ```
 
 程序：使 CPU(运算器和控制器) 工作的一串指令。
@@ -335,3 +339,191 @@ Physic Storage of Float
 ``sizeof()`` ``typeid().name``
 
 ---
+
+ASCII
+
+- 0-32,127: 控制字符
+- 33-126: 显示字符
+
+| 0       | space   | A       | a       |
+| ------- | ------- | ------- | ------- |
+| 48/0x30 | 32/0x20 | 65/0x41 | 97/0x61 |
+
+---
+
+- 普通字符常量 ``'A',' '``
+- 转义字符常量 ``'\n','\t','\v','\b','\r','\a','\\','\?','\'','\"'``
+    - ``\ddd``：000-377 8 进制对应的 ASCII
+    - ``\xhh``：00-ff 8 进制对应的 ASCII，**x 必须小写（和常量的表示不同）**
+
+```
+'\101' == 'A' == '\0x41'
+'\12' == '\012' = '\n'
+```
+
+---
+
+一个字符常量可以有多种表示形式
+
+```
+'\n' == '\12' == '\012' == '\xA' == '\x0A' == '\xa' == '\x0a'
+'\"' == '\42' == '\042' == '\x22'
+```
+
+---
+
+字符在内存中的存储
+
+- 一个字符常量只能表示字符
+- 一个字符在内存中占用一个字节（Byte）
+- 字节的值为该字符的 ASCII 码
+
+字符常量不能表示汉字。
+
+---
+
+字符串常量
+
+``"string"``
+
+***Difference*** of ' and " in C/CPP.
+
+字符串的长度：字符序列中字符的长度。
+
+``"\r \n \t \\ A \\ t \x1b \" \123 4 \xf t \x2f \33"``: 15
+
+**最长原则**
+
+```cpp
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+int main()
+{
+    cout << strlen("string") << endl;
+    return 0;
+}
+```
+
+---
+
+字符串在内存中的存放
+
+ASCIIs + ``"\0"``（尾 0）
+
+``""`` & ``" "``
+
+- ``""``: ``'\0'``
+- ``" "``: ``'\x20','\0'``
+
+可以用字符串常量表示汉字。
+
+---
+
+符号常量
+
+```cpp
+#define pi 3.14159
+```
+
+---
+
+## 2.6
+
+Variable
+
+---
+
+标识符
+
+``[A-Za-z_][0-9A-Za-z_]+``
+
+长度小于等于 32.
+
+标识符不能和关键字同名。
+
+---
+
+Define a Variable
+
+```cpp
+int c,b,a=b=c=1; // IT IS VALID!!
+```
+
+---
+
+Data **overflow** ***isn't*** recognized as error in CPP!
+
+```cpp
+short a = -10;
+unsigned short b = a; // warning
+cout << b << endl; // b = 65526 = 2^{16} - 10
+```
+
+---
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    unsigned long long x = -1LL;
+    cout << x/2 << endl;
+    return 0;
+}
+```
+
+---
+
+不同的数据类型相互转换
+
+- 短到长
+    - ``signed`` 低位赋值，符号位（**如果有**）填充到所有高位；
+    - ``unsigned`` 高位填充 0.
+- 长到短
+    - 舍弃高位
+
+---
+
+Float
+
+```mermaid
+flowchart LR
+    float --correct--> double
+    double --unknown--> float
+```
+
+---
+
+Character
+
+可以作为 1 Byte 的正数参与运算
+
+``char, unsigned char``
+
+---
+
+Constant Variable
+
+常变量必须在定义的时候赋初值，之后不能改变。
+
+---
+
+符号常量和常变量
+
+- 符号常量相当于在程序中把对应的文本替换；
+- 而常变量和其他变量一致，都是具有类型的。
+
+```cpp
+#include <iostream>
+#define pi 3.14;
+
+int main()
+{
+    double r = 1.0;
+    double s = r*r*pi // ;!!!
+    std::cout << s << std::endl;
+}
+```
