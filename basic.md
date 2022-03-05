@@ -394,6 +394,8 @@ ASCII
 
 **最长原则**
 
+---
+
 ```cpp
 #include <iostream>
 #include <cstring>
@@ -527,3 +529,284 @@ int main()
     std::cout << s << std::endl;
 }
 ```
+
+---
+
+##  2.7
+
+C++ Operator
+
+---
+
+运算符
+
+- 单目
+- 双目
+- 三目 ``? :``
+
+- 优先性
+- 结合性：同级运算符进行混合运算时，按结合性方向依次进行处理。比如加号为从左至右，左结合。
+
+***熟记下发附录 D（运算符的优先级）***
+
+---
+
+基本运算符：``+ - * / %``
+
+- 第五级：``* / %``
+- 第六级：``+ -``
+
+都是左结合。
+
+字符型可以参与运算，作为一字节的整数。
+
+```cpp
+10 % -3 == 1
+-10 % 3 == -1
+```
+
+---
+
+```cpp
+#include <iostream>
+using namespace std;
+int main()
+{
+    const double pi = 3.14;
+    double v1, v2;
+    int r = 1;
+    int h = 2;
+    v1 = 1/3*pi*r*r*h; // 0
+    v1 = 4/3*pi*r*r*r; // !!!
+    return 0;
+}
+```
+
+---
+
+用栈理解表达式求值过程
+
+- Number Stack
+- Operator Stack
+
+如果欲进栈的运算符级别高于或等于（右结合）栈顶运算符，则进栈；
+
+如果欲进栈的运算符级别低于或等于（左结合）栈顶运算符，则先将栈顶运算符的运算执行，再进行相似的判断。
+
+不考虑有括号、单目、三目运算符的真实情况。
+
+---
+
+如果某个运算符涉及的两个数据不是同一类型，则需要先转成同一类型在进行运算。
+
+转换的规则：（从高到低）
+
+- long double
+- double
+- float
+- unsigned long long
+- long long
+- unsigned long
+- long
+- unsigned [int]
+- int <- char, u_char, short, u_short (*necessary conversion*: **The Integer Promotion**)
+
+---
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    short a = 1;
+    short b = 32767;
+
+    cout << a + b << endl; // 32768 (?-32768)
+    cout << 1 + b << endl; // -32768
+    cout << sizeof(a + 'A') << endl;
+    cout << typeid(a+b).name() << endl;
+    return 0;
+}
+```
+
+**这个问题的核心是之前的整形转换。**
+
+``b+1`` 还是``short``，而 ``a+b`` 是 ``int``。
+
+---
+
+同级 ``signed`` 和 ``unsigned`` 结合时，以 ``unsigned`` 为准。
+
+```cpp
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    int x = 12;
+    cout << x-13 << endl; // -1
+    unsigned int y = 12;
+    cout << x-13 << endl; // lkfhaoehf
+    return 0;
+}
+```
+
+---
+
+类型转换由系统隐式进行。
+
+进行不是一次完成的，而是按照计算的顺序（参见之前的栈规则），一次一次地转化。
+
+---
+
+自增自减运算符
+
+- 前缀：优先级 3 级
+- 后缀：优先级 2 级
+
+```cpp
+#include <iostream>
+using namespace std;
+int main()
+{
+    int i = 3;
+    int j = ++i; // 4
+    int k = i++; // 3
+    return 0;
+}
+```
+
+---
+
+```cpp
+    int i = 3;
+    i = i++;
+    int j = 3;
+    j = j++; // differ in gcc and VC++
+```
+
+---
+
+递增运算不影响变量本身，影响表达式。
+
+严格地说前缀效率更高，因为后缀需要临时变量。
+
+递增运算只能对变量进行运算，不能对常量和表达式进行运算。
+
+---
+
+强制类型转换：必须再程序中显式使用。
+
+```c
+(int)(a+b);
+```
+
+```cpp
+int(a+b);
+int(a);
+static_cast<int>(a+b);
+static_cast<int>(a);
+```
+
+---
+
+赋值运算和赋值表达式
+
+Left Value Must Be A Variable.
+
+***Warning*** **如果不改直接再次运行，将不会再出现**。
+
+---
+
+- ``float, double`` --->  ``char, short, int, long, long long`` 取整（可能溢出）
+- ``char, short, int, long, long long`` --->  ``float, double`` 不变（但是精度可能受影响，小数部分截断）
+- ``char, short, int, long, long long`` 按照低位补位，高位截断规则
+- ``unsigned`` --->  ``signed`` 二进制码不变
+
+---
+
+复合赋值运算符
+
+``+=, -=, *=, /=, %=`` 这些优先级都**相同**。
+
+---
+
+赋值表达式的值和变量的值相同。
+
+任何表达式都是有值的。
+
+``a = b = c = 5`` => ``a = (b = (c = 5))``
+
+```cpp
+#include <iostream>
+using namespace std;
+int main()
+{
+    int a = b = c = 5; // "b", "c" is not declared in this scope!
+    int x;
+    long b;
+    float c;
+    x = b = c = 5.0; // 3 times type conversion
+    return 0;
+}
+```
+
+---
+
+
+```cpp
+#include <iostream>
+using namespace std;
+int main()
+{
+    int a;
+    (a=3*5)=4*3; // a = 12
+    a = 3*5 = 4*3; // Left value!!: 15 = 12
+    return 0;
+}
+```
+
+在执行第二个等号时，等号的左值已经变成了变量 ``a``.
+
+---
+
+```cpp
+#include <iostream>
+using namespace std;
+int main()
+{
+    int a = 12;
+    a += a -= a * a;
+    return 0;
+}
+```
+
+- 12 * 12; a = 12
+- a -= 144; a = 12
+- a += -132; a = -132
+
+---
+
+Comma
+
+级别最低的运算符
+
+```cpp
+#include <iostream>
+using namespace std;
+int main()
+{
+    int a = 0;
+    int b = (a=3*5, a*4) // b = 60
+    return 0;
+}
+```
+
+---
+
+表达式均有值，表达式的类型由最后一步的计算决定。
+
+- 算术表达式：只有算术表达式才有隐式类型转换。
+- （复合）赋值表达式
+- 逗号表达式
