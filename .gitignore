@@ -1,5 +1,6 @@
 # VS Configuration #
 ####################
+*/x64
 */.vs
 */Debug
 *.sln
