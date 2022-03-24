@@ -642,3 +642,6 @@ For vs. While
 
 ---
 
+$$
+K_{inner} = \sum_{i=0}^{k_{outer}} k_{inner}(i)
+$$
