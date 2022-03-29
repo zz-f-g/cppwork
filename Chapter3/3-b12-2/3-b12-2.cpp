@@ -500,6 +500,7 @@ int main()
 
 	higher_digit = d9 || d8 || d7 || d6 || d5 || d4 || d3 || d2 || d1 || d0;
 	zero_flag = 0;
+
 	if (higher_digit)
 		cout << "Բ";
 
