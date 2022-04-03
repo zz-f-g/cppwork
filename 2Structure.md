@@ -641,3 +641,45 @@ For vs. While
 ```
 
 ---
+
+错误处理专题
+
+- ``cin``
+- ``scanf()``
+
+---
+
+```cpp
+int a;
+cin >> a;
+```
+
+```
+1000000000000
+cin.good() == 0
+```
+
+```cpp
+cin.clear(); // 清除错误标志位
+cin.ignore(65536, '\n'); // 清除输入缓冲区
+```
+
+---
+
+```c
+int x;
+char ch;
+while (1)
+{
+    printf("Input a int in [0,100]\n");
+    if (scanf("%d", x)); // 截断赋值
+    {
+        while ((ch = getchar()) != '\n')
+        {
+            ;
+        }
+        // scanf("%*[^\n]");
+        // setbuff(stdin, NULL); // 清空缓冲区，只能用一次
+    }
+}
+```
