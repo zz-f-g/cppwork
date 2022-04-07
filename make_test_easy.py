@@ -10,10 +10,6 @@ __author__ = 'zz Guo'
 
 import re
 
-class data():
-    def __init__(self, n_groups: int) -> None:
-        self.grp = n_groups
-
 def launch_test(project_name: str, group_size: int = 1) -> tuple:
     cnt_group = 0
     data = ''
@@ -27,7 +23,7 @@ def launch_test(project_name: str, group_size: int = 1) -> tuple:
             if re.match(r'^[-+]?[0-9]*\.?[0-9]+$', tmp):
                 group += tmp + ' '
             else:
-                return (data, cnt_group)
+                return (data, cnt_group - 1)
         data += f"[{project_name}-{cnt_group}]\n" + group + '\n\n'
 
 def launch_bat(project_name: str, n_groups: int, project_version: int = None, flag_echo: int = 0) -> str:
@@ -35,13 +31,12 @@ def launch_bat(project_name: str, n_groups: int, project_version: int = None, fl
     if (flag_echo):
         str_bat = ''
     for group in range(n_groups):
-        str_bat += f'get_input_data {project_name}-test-data.txt [{project_name}-{group+1}] | {project_name}-demo.exe > {project_name}-stdresults.txt\n'
+        str_bat += f'get_input_data {project_name}-test-pipe.txt [{project_name}-{group+1}] | {project_name}-demo.exe > {project_name}-stdresults.txt\n'
     str_bat += '\n'
     if (project_version != None):
         project = project_name + '-' + str(project_version)
     for group in range(n_groups):
-        str_bat += f'get_input_data {project_name}-test-data.txt [{project_name}-{group+1}] | {project}.exe > {project_name}-myresults.txt\n'
-    
+        str_bat += f'get_input_data {project_name}-test-pipe.txt [{project_name}-{group+1}] | {project}.exe > {project_name}-myresults.txt\n'
     return str_bat
 
 def main() -> None:
@@ -49,8 +44,7 @@ def main() -> None:
     project_version = 1
     group_size = int(input("Input the group size: "))
 
-    str_test_data = launch_test(project_name, group_size)[0]
-    n_groups = launch_test(project_name, group_size)[1]
+    str_test_data, n_groups = launch_test(project_name, group_size)
     str_bat = launch_bat(project_name, n_groups, project_version)
 
     with open(f'{project_name}-test-data.txt', 'w') as f:
