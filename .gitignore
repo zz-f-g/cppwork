@@ -1,10 +1,10 @@
 # vscode Configuration #
 ##########################
-*/.vscode
+.vscode
 
 # Obsidian Configuration #
 ##########################
-*/.obsidian
+.obsidian
 
 # VS Configuration #
 ####################
