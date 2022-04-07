@@ -10,7 +10,7 @@
         "state": {
           "type": "markdown",
           "state": {
-            "file": "2structure.md",
+            "file": "4function.md",
             "mode": "source",
             "source": false
           }
@@ -20,11 +20,35 @@
       {
         "id": "2e723a97488d885a",
         "type": "leaf",
-        "dimension": 15.444015444015442,
+        "dimension": 7.72200772200772,
         "state": {
           "type": "outline",
           "state": {
-            "file": "Chapter4/4-b4-1/4-b4-1.c"
+            "file": "4function.md"
+          }
+        },
+        "group": "062e7d2e8a4af293"
+      },
+      {
+        "id": "c4ee88ea3bdadb6e",
+        "type": "leaf",
+        "dimension": 3.86100386100386,
+        "state": {
+          "type": "outline",
+          "state": {
+            "file": "4function.md"
+          }
+        },
+        "group": "062e7d2e8a4af293"
+      },
+      {
+        "id": "df383d6e06cd5ca1",
+        "type": "leaf",
+        "dimension": 3.86100386100386,
+        "state": {
+          "type": "outline",
+          "state": {
+            "file": "4function.md"
           }
         },
         "group": "062e7d2e8a4af293"
@@ -83,7 +107,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Chapter4/4-b4-1/4-b4-1.c",
+                "file": "4function.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -100,7 +124,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Chapter4/4-b4-1/4-b4-1.c"
+                "file": "4function.md"
               }
             }
           },
@@ -119,17 +143,17 @@
     "width": 300,
     "collapsed": true
   },
-  "active": "2e723a97488d885a",
+  "active": "a6f6f97b271e0fc8",
   "lastOpenFiles": [
-    "Chapter4/4-b4-1/4-b4-1.c",
-    "2structure.md",
-    "Chapter3/3-b14/Readme-3-b14.md",
+    "4function.md",
     "Chapter3/3-b16-1/Readme-3-b16.md",
+    "Chapter3/3-b15/Readme-3-b15.md",
+    "Chapter3/3-b14/Readme-3-b14.md",
+    "3structure.md",
+    "1introduction.md",
+    "2basic.md",
+    "Chapter4/4-b4-1/4-b4-1.c",
     "Chapter3/3-b18-1/Readme-3-b18.md",
-    "Chapter4/4-b3/Readme-4-b3.md",
-    "Chapter4/4-b2-1/Readme-4-b2.md",
-    "Chapter3/3-b12-1/Readme-3-b12.md",
-    "Chapter3/3-b17-1/Readme-3-b17.md",
-    "Chapter4/4-b1/Readme-4-b1.md"
+    "Chapter4/4-b3/Readme-4-b3.md"
   ]
 }
