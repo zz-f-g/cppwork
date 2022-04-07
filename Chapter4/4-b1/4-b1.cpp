@@ -104,15 +104,6 @@ int main()
 
 	cout << "大写结果是:\n";
 
-	if (d_2 == 0 && d_1 == 0
-		&& d0 == 0 && d1 == 0 && d2 == 0 && d3 == 0
-		&& d4 == 0 && d5 == 0 && d6 == 0 && d7 == 0
-		&& d8 == 0 && d9 == 0)
-	{
-		cout << "零圆整\n";
-		return 0;
-	}
-
 	//十亿
 	daxie(d9, zero_flag);
 	if (d9)
@@ -133,13 +124,13 @@ int main()
 		cout << "仟";
 
 	//百万
-	zero_flag = (higher_flag && d7 && (d5 || d4)) ? 1 : 0;
+	zero_flag = (d7 && (d5 || d4)) ? 1 : 0;
 	daxie(d6, zero_flag);
 	if (d6)
 		cout << "佰";
 
 	//十万
-	zero_flag = (higher_flag && (d7 || d6) && d4) ? 1 : 0;
+	zero_flag = (d6 && d4) ? 1 : 0;
 	daxie(d5, zero_flag);
 	if (d5)
 		cout << "拾";
@@ -159,13 +150,13 @@ int main()
 		cout << "仟";
 
 	//百
-	zero_flag = (higher_flag && d3 && (d1 || d0)) ? 1 : 0;
+	zero_flag = (d3 && (d1 || d0)) ? 1 : 0;
 	daxie(d2, zero_flag);
 	if (d2)
 		cout << "佰";
 
 	//十
-	zero_flag = (higher_flag && (d3 || d2) && d0) ? 1 : 0;
+	zero_flag = (d2 && d0) ? 1 : 0;
 	daxie(d1, zero_flag);
 	if (d1)
 		cout << "拾";
@@ -178,16 +169,19 @@ int main()
 
 	if (higher_flag)
 		cout << "圆";
-	else
-		cout << "零圆";
 
 	if (d_1 == 0 && d_2 == 0)
+	{
+		if (higher_flag == 0)
+		    cout << "零圆";
 		cout << "整";
+	}
 	else
 	{
 		//角
-		daxie(d_1, d_2);
-		cout << "角";
+		daxie(d_1, ((higher_flag != 0) && (d_2 != 0)));
+		if (d_1)
+			cout << "角";
 
 		//分
 		if (d_2)
@@ -202,3 +196,4 @@ int main()
 
 	return 0;
 }
+

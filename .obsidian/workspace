@@ -1,0 +1,135 @@
+{
+  "main": {
+    "id": "1772018a47932862",
+    "type": "split",
+    "children": [
+      {
+        "id": "a6f6f97b271e0fc8",
+        "type": "leaf",
+        "dimension": 84.55598455598457,
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "2structure.md",
+            "mode": "source",
+            "source": false
+          }
+        },
+        "group": "062e7d2e8a4af293"
+      },
+      {
+        "id": "2e723a97488d885a",
+        "type": "leaf",
+        "dimension": 15.444015444015442,
+        "state": {
+          "type": "outline",
+          "state": {
+            "file": "Chapter4/4-b4-1/4-b4-1.c"
+          }
+        },
+        "group": "062e7d2e8a4af293"
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "740c526904f2e69a",
+    "type": "split",
+    "children": [
+      {
+        "id": "1466f415975a53c0",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "e8967fc00d9f1db4",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {}
+            }
+          },
+          {
+            "id": "593f4ce8b712f73d",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "\"![[Pasted image 20220228103114.png]]\"",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 182
+  },
+  "right": {
+    "id": "09127cedb66d75b8",
+    "type": "split",
+    "children": [
+      {
+        "id": "72811cf5b855c772",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "bd0e626a7be80da8",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Chapter4/4-b4-1/4-b4-1.c",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "1dad874a3fa01ce6",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Chapter4/4-b4-1/4-b4-1.c"
+              }
+            }
+          },
+          {
+            "id": "1a00cd09d3b488e1",
+            "type": "leaf",
+            "state": {
+              "type": "advanced-tables-toolbar",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "active": "2e723a97488d885a",
+  "lastOpenFiles": [
+    "Chapter4/4-b4-1/4-b4-1.c",
+    "2structure.md",
+    "Chapter3/3-b14/Readme-3-b14.md",
+    "Chapter3/3-b16-1/Readme-3-b16.md",
+    "Chapter3/3-b18-1/Readme-3-b18.md",
+    "Chapter4/4-b3/Readme-4-b3.md",
+    "Chapter4/4-b2-1/Readme-4-b2.md",
+    "Chapter3/3-b12-1/Readme-3-b12.md",
+    "Chapter3/3-b17-1/Readme-3-b17.md",
+    "Chapter4/4-b1/Readme-4-b1.md"
+  ]
+}

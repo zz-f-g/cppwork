@@ -1,7 +1,8 @@
 /* 2052110 自动化 郭子瞻 */
 
-#define _CRT_SECURE_NO_WARNINGS
-#include <stdio.h>
+#include <iostream>
+#include <limits>
+using namespace std;
 
 int zeller(int y, int m, int d)
 {
@@ -30,27 +31,27 @@ int main()
 {
 	const int Lower_Limit = 1900;
 	const int Upper_Limit = 2100;
-	int y, m, d, w, ret, leap, day_tot;
+	int y, m, d, w, leap, day_tot;
 
 	while (1)
 	{
-		printf("请输入年[1900-2100]、月、日：\n");
-		ret = scanf("%d%d%d", &y, &m, &d);
-		if (ret != 3)
+		cout << "请输入年[1900-2100]、月、日：" << endl;
+		cin >> y >> m >> d;
+		if (cin.fail())
 		{
-			scanf("%*[^\n]");
-			scanf("%*c");
-			printf("输入错误，请重新输入\n");
+			cin.clear();
+			cin.ignore(numeric_limits<std::streamsize>::max(), '\n');
+			cout << "输入错误，请重新输入" << endl;
 			continue;
 		}
 		else if (y > Upper_Limit || y < Lower_Limit)
 		{
-			printf("年份不正确，请重新输入\n");
+			cout << "年份不正确，请重新输入" << endl;
 			continue;
 		}
 		else if (m > 12 || m <= 0)
 		{
-			printf("月份不正确，请重新输入\n");
+			cout << "月份不正确，请重新输入" << endl;
 			continue;
 		}
 
@@ -59,7 +60,7 @@ int main()
 
 		if (d > day_tot || d <= 0)
 		{
-			printf("日不正确，请重新输入\n");
+			cout << "日不正确，请重新输入" << endl;
 			continue;
 		}
 		else
@@ -68,32 +69,31 @@ int main()
 	
 	w = zeller(y, m, d);
 
-	printf("星期");
+	cout << "星期";
 	switch (w)
 	{
 		case 0:
-			printf("日");
+	        cout << "日" << endl;
 			break;
 		case 1:
-			printf("一");
+	        cout << "一" << endl;
 			break;
 		case 2:
-			printf("二");
+	        cout << "二" << endl;
 			break;
 		case 3:
-			printf("三");
+	        cout << "三" << endl;
 			break;
 		case 4:
-			printf("四");
+	        cout << "四" << endl;
 			break;
 		case 5:
-			printf("五");
+	        cout << "五" << endl;
 			break;
 		case 6:
-			printf("六");
+	        cout << "六" << endl;
 			break;
 	}
-	printf("\n");
 
 	return 0;
 }

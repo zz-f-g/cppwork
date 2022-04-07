@@ -49,7 +49,7 @@ int main()
 	}
 
 	leap = (year % 400 == 0) || ((year % 100 != 0) && (year % 4 == 0));
-	day_tot = (month == 2 || month == 4 || month == 6 || month == 9 || month == 11) ? (30 - 2 * (month == 2) + leap) : 31;
+	day_tot = (month == 2 || month == 4 || month == 6 || month == 9 || month == 11) ? (30 - (2 - leap) * (month == 2)) : 31;
 
 	cout << year << "年" << month << "月的月历为:" << endl;
 	cout << "星期日  星期一  星期二  星期三  星期四  星期五  星期六" << endl;
