@@ -234,9 +234,9 @@ int main()
     int x, y;
     x = 1;
     y = 0;
-    cout << "x=" << x << ", y=" << y << endl;
+    cout << "x=" << x << ", y=" << y << endl; // x=1, y=0
     swap(x, y);
-    cout << "x=" << x << ", y=" << y << endl;
+    cout << "x=" << x << ", y=" << y << endl; // x=1, y=0
     return 0;
 }
 ```
