@@ -40,6 +40,6 @@ int main()
     int num, base;
     cout << "请输入整数num及基数base" << endl;
     cin >> num >> base;
-    cout << num << (is_power(num, base) ? "" : "不") << "是" << base << "的幂" << endl;
+    cout << num << (is_power(num, base) ? "是" : "不是") << base << "的幂" << endl;
     return 0;
 }

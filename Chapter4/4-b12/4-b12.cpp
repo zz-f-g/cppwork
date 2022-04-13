@@ -29,9 +29,11 @@ void hanoi(int n, char src, char tmp, char dst)
         return;
     }
     else
+    {
         hanoi(n - 1, src, dst, tmp);
         cout << setw(2) << n << "# " << src << "-->" << dst << endl;
         hanoi(n - 1, tmp, src, dst);
+    }
 }
 
 /***************************************************************************
