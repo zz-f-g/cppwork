@@ -33,9 +33,7 @@ void convert(int n)
         nega_flag = 1;
     }
     printf("%c ", (char)(n % 10 + 48));
-    if (n < 10 && n >= 0)
-        return;
-    else
+    if (n >= 10)
         convert(n / 10);
     if (nega_flag)
         printf("- ");
