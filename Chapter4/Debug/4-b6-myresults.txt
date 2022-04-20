@@ -1,0 +1,2 @@
+计算legendre，请输入x和n的值
+legendre[30](3.4)=5.01191e+23

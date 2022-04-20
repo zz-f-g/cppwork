@@ -33,7 +33,7 @@ int main()
 
     while (!flag)
     {
-        cout << "输入个数num及num个正整数：" << endl;
+        cout << "请输入个数num及num个正整数：" << endl;
         cin >> num;
         if (cin.fail())
         {

@@ -1,0 +1,32 @@
+@echo off
+get_input_data 4-b8_data.txt [4-b8-1] | 4-b8-demo.exe > 4-b8-stdresults.txt
+get_input_data 4-b8_data.txt [4-b8-2] | 4-b8-demo.exe >> 4-b8-stdresults.txt
+get_input_data 4-b8_data.txt [4-b8-3] | 4-b8-demo.exe >> 4-b8-stdresults.txt
+get_input_data 4-b8_data.txt [4-b8-4] | 4-b8-demo.exe >> 4-b8-stdresults.txt
+get_input_data 4-b8_data.txt [4-b8-5] | 4-b8-demo.exe >> 4-b8-stdresults.txt
+get_input_data 4-b8_data.txt [4-b8-6] | 4-b8-demo.exe >> 4-b8-stdresults.txt
+get_input_data 4-b8_data.txt [4-b8-7] | 4-b8-demo.exe >> 4-b8-stdresults.txt
+get_input_data 4-b8_data.txt [4-b8-8] | 4-b8-demo.exe >> 4-b8-stdresults.txt
+get_input_data 4-b8_data.txt [4-b8-9] | 4-b8-demo.exe >> 4-b8-stdresults.txt
+get_input_data 4-b8_data.txt [4-b8-10] | 4-b8-demo.exe >> 4-b8-stdresults.txt
+get_input_data 4-b8_data.txt [4-b8-11] | 4-b8-demo.exe >> 4-b8-stdresults.txt
+get_input_data 4-b8_data.txt [4-b8-12] | 4-b8-demo.exe >> 4-b8-stdresults.txt
+get_input_data 4-b8_data.txt [4-b8-13] | 4-b8-demo.exe >> 4-b8-stdresults.txt
+get_input_data 4-b8_data.txt [4-b8-14] | 4-b8-demo.exe >> 4-b8-stdresults.txt
+get_input_data 4-b8_data.txt [4-b8-15] | 4-b8-demo.exe >> 4-b8-stdresults.txt
+
+get_input_data 4-b8_data.txt [4-b8-1] | 4-b8.exe > 4-b8-myresults.txt
+get_input_data 4-b8_data.txt [4-b8-2] | 4-b8.exe >> 4-b8-myresults.txt
+get_input_data 4-b8_data.txt [4-b8-3] | 4-b8.exe >> 4-b8-myresults.txt
+get_input_data 4-b8_data.txt [4-b8-4] | 4-b8.exe >> 4-b8-myresults.txt
+get_input_data 4-b8_data.txt [4-b8-5] | 4-b8.exe >> 4-b8-myresults.txt
+get_input_data 4-b8_data.txt [4-b8-6] | 4-b8.exe >> 4-b8-myresults.txt
+get_input_data 4-b8_data.txt [4-b8-7] | 4-b8.exe >> 4-b8-myresults.txt
+get_input_data 4-b8_data.txt [4-b8-8] | 4-b8.exe >> 4-b8-myresults.txt
+get_input_data 4-b8_data.txt [4-b8-9] | 4-b8.exe >> 4-b8-myresults.txt
+get_input_data 4-b8_data.txt [4-b8-10] | 4-b8.exe >> 4-b8-myresults.txt
+get_input_data 4-b8_data.txt [4-b8-11] | 4-b8.exe >> 4-b8-myresults.txt
+get_input_data 4-b8_data.txt [4-b8-12] | 4-b8.exe >> 4-b8-myresults.txt
+get_input_data 4-b8_data.txt [4-b8-13] | 4-b8.exe >> 4-b8-myresults.txt
+get_input_data 4-b8_data.txt [4-b8-14] | 4-b8.exe >> 4-b8-myresults.txt
+get_input_data 4-b8_data.txt [4-b8-15] | 4-b8.exe >> 4-b8-myresults.txt
