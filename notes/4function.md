@@ -426,6 +426,9 @@ int main()
 }
 ```
 
+---
+
+静态全局变量
 ```cpp
 // file3.cpp
 static int a; // can't be called by other file

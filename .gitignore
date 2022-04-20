@@ -17,6 +17,11 @@
 *.filters
 *.user
 
+# Dev C++ Configuration #
+#########################
+*.dev
+*.layout
+*.win
 
 # Compiled source #
 ###################

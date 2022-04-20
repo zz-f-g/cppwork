@@ -2,7 +2,6 @@
 
 #include <iostream>
 using namespace std;
-template <typename T>
 
 /* 1、不准添加其它头文件
    2、不准添加其它函数
@@ -16,6 +15,7 @@ template <typename T>
   返 回 值：
   说    明：给出fun函数的定义及实现
  ***************************************************************************/
+template <typename T>
 T fun(T n)
 {
     T sum = 0;
