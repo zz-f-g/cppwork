@@ -9,6 +9,16 @@ get_input_data 5-b6-test-data.txt [5-b6-7] | 5-b6-demo.exe >> 5-b6-stdresults.tx
 get_input_data 5-b6-test-data.txt [5-b6-8] | 5-b6-demo.exe >> 5-b6-stdresults.txt
 get_input_data 5-b6-test-data.txt [5-b6-9] | 5-b6-demo.exe >> 5-b6-stdresults.txt
 get_input_data 5-b6-test-data.txt [5-b6-10] | 5-b6-demo.exe >> 5-b6-stdresults.txt
+get_input_data 5-b6-test-data.txt [5-b6-11] | 5-b6-demo.exe >> 5-b6-stdresults.txt
+get_input_data 5-b6-test-data.txt [5-b6-12] | 5-b6-demo.exe >> 5-b6-stdresults.txt
+get_input_data 5-b6-test-data.txt [5-b6-13] | 5-b6-demo.exe >> 5-b6-stdresults.txt
+get_input_data 5-b6-test-data.txt [5-b6-14] | 5-b6-demo.exe >> 5-b6-stdresults.txt
+get_input_data 5-b6-test-data.txt [5-b6-15] | 5-b6-demo.exe >> 5-b6-stdresults.txt
+get_input_data 5-b6-test-data.txt [5-b6-16] | 5-b6-demo.exe >> 5-b6-stdresults.txt
+get_input_data 5-b6-test-data.txt [5-b6-17] | 5-b6-demo.exe >> 5-b6-stdresults.txt
+get_input_data 5-b6-test-data.txt [5-b6-18] | 5-b6-demo.exe >> 5-b6-stdresults.txt
+get_input_data 5-b6-test-data.txt [5-b6-19] | 5-b6-demo.exe >> 5-b6-stdresults.txt
+get_input_data 5-b6-test-data.txt [5-b6-20] | 5-b6-demo.exe >> 5-b6-stdresults.txt
 
 get_input_data 5-b6-test-data.txt [5-b6-1] | 5-b6-1.exe > 5-b6-1-myresults.txt
 get_input_data 5-b6-test-data.txt [5-b6-2] | 5-b6-1.exe >> 5-b6-1-myresults.txt
@@ -20,6 +30,16 @@ get_input_data 5-b6-test-data.txt [5-b6-7] | 5-b6-1.exe >> 5-b6-1-myresults.txt
 get_input_data 5-b6-test-data.txt [5-b6-8] | 5-b6-1.exe >> 5-b6-1-myresults.txt
 get_input_data 5-b6-test-data.txt [5-b6-9] | 5-b6-1.exe >> 5-b6-1-myresults.txt
 get_input_data 5-b6-test-data.txt [5-b6-10] | 5-b6-1.exe >> 5-b6-1-myresults.txt
+get_input_data 5-b6-test-data.txt [5-b6-11] | 5-b6-1.exe >> 5-b6-1-myresults.txt
+get_input_data 5-b6-test-data.txt [5-b6-12] | 5-b6-1.exe >> 5-b6-1-myresults.txt
+get_input_data 5-b6-test-data.txt [5-b6-13] | 5-b6-1.exe >> 5-b6-1-myresults.txt
+get_input_data 5-b6-test-data.txt [5-b6-14] | 5-b6-1.exe >> 5-b6-1-myresults.txt
+get_input_data 5-b6-test-data.txt [5-b6-15] | 5-b6-1.exe >> 5-b6-1-myresults.txt
+get_input_data 5-b6-test-data.txt [5-b6-16] | 5-b6-1.exe >> 5-b6-1-myresults.txt
+get_input_data 5-b6-test-data.txt [5-b6-17] | 5-b6-1.exe >> 5-b6-1-myresults.txt
+get_input_data 5-b6-test-data.txt [5-b6-18] | 5-b6-1.exe >> 5-b6-1-myresults.txt
+get_input_data 5-b6-test-data.txt [5-b6-19] | 5-b6-1.exe >> 5-b6-1-myresults.txt
+get_input_data 5-b6-test-data.txt [5-b6-20] | 5-b6-1.exe >> 5-b6-1-myresults.txt
 
 get_input_data 5-b6-test-data.txt [5-b6-1] | 5-b6-2.exe > 5-b6-2-myresults.txt
 get_input_data 5-b6-test-data.txt [5-b6-2] | 5-b6-2.exe >> 5-b6-2-myresults.txt
@@ -31,3 +51,13 @@ get_input_data 5-b6-test-data.txt [5-b6-7] | 5-b6-2.exe >> 5-b6-2-myresults.txt
 get_input_data 5-b6-test-data.txt [5-b6-8] | 5-b6-2.exe >> 5-b6-2-myresults.txt
 get_input_data 5-b6-test-data.txt [5-b6-9] | 5-b6-2.exe >> 5-b6-2-myresults.txt
 get_input_data 5-b6-test-data.txt [5-b6-10] | 5-b6-2.exe >> 5-b6-2-myresults.txt
+get_input_data 5-b6-test-data.txt [5-b6-11] | 5-b6-2.exe >> 5-b6-2-myresults.txt
+get_input_data 5-b6-test-data.txt [5-b6-12] | 5-b6-2.exe >> 5-b6-2-myresults.txt
+get_input_data 5-b6-test-data.txt [5-b6-13] | 5-b6-2.exe >> 5-b6-2-myresults.txt
+get_input_data 5-b6-test-data.txt [5-b6-14] | 5-b6-2.exe >> 5-b6-2-myresults.txt
+get_input_data 5-b6-test-data.txt [5-b6-15] | 5-b6-2.exe >> 5-b6-2-myresults.txt
+get_input_data 5-b6-test-data.txt [5-b6-16] | 5-b6-2.exe >> 5-b6-2-myresults.txt
+get_input_data 5-b6-test-data.txt [5-b6-17] | 5-b6-2.exe >> 5-b6-2-myresults.txt
+get_input_data 5-b6-test-data.txt [5-b6-18] | 5-b6-2.exe >> 5-b6-2-myresults.txt
+get_input_data 5-b6-test-data.txt [5-b6-19] | 5-b6-2.exe >> 5-b6-2-myresults.txt
+get_input_data 5-b6-test-data.txt [5-b6-20] | 5-b6-2.exe >> 5-b6-2-myresults.txt

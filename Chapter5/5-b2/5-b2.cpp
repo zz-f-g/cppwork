@@ -21,6 +21,7 @@ int main()
     const int MAXSIZE = 100;
     int lights[MAXSIZE] = { 0 };
     int people = 1;
+    int start = 1;
     int i;
     while (people <= MAXSIZE)
     {
@@ -32,7 +33,12 @@ int main()
     while (i < MAXSIZE)
     {
         if (lights[i])
-            cout << i + 1 << " ";
+        {
+            if (start == 0)
+                cout << " ";
+            cout << i + 1;
+            start = 0;
+        }
         ++i;
     }
     cout << endl;

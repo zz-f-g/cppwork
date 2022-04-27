@@ -12,7 +12,6 @@ void print_arr(int arr[], int len)
 
 void insert(int arr[], int len, int insertion)
 {
-    int flag = 0;
     if (insertion >= arr[len-1])
     {
         arr[len] = insertion;
@@ -22,7 +21,7 @@ void insert(int arr[], int len, int insertion)
     {
         arr[len] = arr[len - 1];
         --len;
-        while (insertion < arr[len-1] && len > 0)
+        while (len > 0 && insertion < arr[len-1])
         {
             arr[len] = arr[len - 1];
             --len;
