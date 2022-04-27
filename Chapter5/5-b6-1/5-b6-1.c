@@ -4,8 +4,12 @@
 #include <stdio.h>
 #define MAXSIZE 10
 
-int tops[3] = { 0 };
-int state[3][MAXSIZE] = { 0 };
+int topA = 0;
+int topB = 0;
+int topC = 0;
+int stateA[MAXSIZE] = { 0 };
+int stateB[MAXSIZE] = { 0 };
+int stateC[MAXSIZE] = { 0 };
 unsigned int cnt = 1;
 
 void init_stack(int top, int stack[])
@@ -21,13 +25,63 @@ void init_stack(int top, int stack[])
 
 void init_state(int n, char src)
 {
-    init_stack(n, state[src - 'A']);
-    tops[src - 'A'] = n;
+    switch (src)
+    {
+        case 'A':
+            init_stack(n, stateA);
+            topA = n;
+            break;
+        case 'B':
+            init_stack(n, stateB);
+            topB = n;
+            ;
+            break;
+        case 'C':
+            init_stack(n, stateC);
+            topC = n;
+            ;
+            break;
+    }
 }
 
 void move_state(char src, char dst)
 {
-    state[dst - 'A'][tops[dst - 'A']++] = state[src - 'A'][--tops[src - 'A']];
+    switch (src)
+    {
+        case 'A':
+            switch (dst)
+            {
+                case 'B':
+                    stateB[topB++] = stateA[--topA];
+                    break;
+                case 'C':
+                    stateC[topC++] = stateA[--topA];
+                    break;
+            }
+            break;
+        case 'B':
+            switch (dst)
+            {
+                case 'C':
+                    stateC[topC++] = stateB[--topB];
+                    break;
+                case 'A':
+                    stateA[topA++] = stateB[--topB];
+                    break;
+            }
+            break;
+        case 'C':
+            switch (dst)
+            {
+                case 'A':
+                    stateA[topA++] = stateC[--topC];
+                    break;
+                case 'B':
+                    stateB[topB++] = stateC[--topC];
+                    break;
+            }
+            break;
+    }
 }
 
 void print_stack(int stack[], int top)
@@ -49,11 +103,11 @@ void print_stack(int stack[], int top)
 void print_state()
 {
     printf(" A:");
-    print_stack(state[0], tops[0]);
+    print_stack(stateA, topA);
     printf(" B:");
-    print_stack(state[1], tops[1]);
+    print_stack(stateB, topB);
     printf(" C:");
-    print_stack(state[2], tops[2]);
+    print_stack(stateC, topC);
     printf("\n");
 }
 
