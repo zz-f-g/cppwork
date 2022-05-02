@@ -34,12 +34,10 @@ void init_state(int n, char src)
         case 'B':
             init_stack(n, stateB);
             topB = n;
-            ;
             break;
         case 'C':
             init_stack(n, stateC);
             topC = n;
-            ;
             break;
     }
 }

@@ -1,12 +1,9 @@
 #include <iostream>
-#include <iomanip>
 using namespace std;
 int main()
 {
-    double a;
-    double b = 100;
-    cin >> a;
-    ;
-
-    return 0;
+    int i;
+    char a[10] = { 'c','h','i','n','a' };
+    for (i = 0; i < 10; i++)
+        cout << a[i] << ' ';
 }
