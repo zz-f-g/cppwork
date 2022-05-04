@@ -1,8 +1,10 @@
 /* 2052110 自动化 郭子瞻 */
 
 #include <iostream>
+#include <cmath> // fabs()
 using namespace std;
 #define MAXSIZE 7
+#define PRECISION 1e-6
 
 /*To calculate the cross product of two 2D vectors
 - input:
@@ -44,17 +46,21 @@ void vertex2vector(const double x_vertex[], const double y_vertex[], double x_ve
 */
 int ifconvex(const double x_coord[], const double y_coord[], int num)
 {
-    double prev;
+    int ifcounter = -1; // clockwise by default
     double curr;
     for (int i = 0; i < num; ++i)
     {
         curr = cross_product(x_coord[i], y_coord[i], x_coord[(i+1)%num], y_coord[(i+1)%num]);
         if (i)
         {
-            if (curr * prev <= 0)
+            if (curr * ifcounter < PRECISION) // not convex or 3 points at a line
                 return 0;
         }
-        prev = curr;
+        else
+            if (fabs(curr) < PRECISION) // 3 points at a line
+                return 0;    
+            else if (curr > 0)
+                ifcounter = 1; // counterclockwise
     }
     return 1;
 }
@@ -75,13 +81,14 @@ double get_area(const double x_coord[], const double y_coord[], int num)
     double curr_y = y_coord[0];
     for (int i = 1; i < num - 1; ++i)
     {
+        // area = sum of area of num - 2 triangles
         triangle_area = cross_product(curr_x, curr_y, x_coord[i], y_coord[i]) / 2.0;
         area += triangle_area;
         curr_x += x_coord[i];
         curr_y += y_coord[i];
     }
     if (area < 0)
-        area = -area;
+        area = -area; // clockwise
     return area;
 }
 
@@ -108,26 +115,25 @@ int main()
     cout << "请按顺时针/逆时针方向输入" << num << "个顶点的x,y坐标：" << endl;
     for (int i = 0; i < num; ++i)
     {
-        cout << "请输入第" << i + 1 << "个顶点的坐标：" << endl;
-        cin >> x >> y;
-        while (cin.fail())
+        while (1)
         {
-            cin.clear();
-            cin.ignore(65536, '\n');
             cout << "请输入第" << i + 1 << "个顶点的坐标：" << endl;
             cin >> x >> y;
+            if (cin.fail())
+            {
+                cin.clear();
+                cin.ignore(65536, '\n');
+            }
+            else
+                break;
         }
         x_vertex[i] = x;
         y_vertex[i] = y;
     }
     vertex2vector(x_vertex, y_vertex, x_vector, y_vector, num);
     if (ifconvex(x_vector, y_vector, num))
-    {
         cout << "凸" << num << "边形的面积=" << get_area(x_vector, y_vector, num) << endl;
-    }
     else
-    {
         cout << "不是凸" << num << "边形" << endl;
-    }
     return 0;
 }
