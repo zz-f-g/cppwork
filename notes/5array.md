@@ -340,7 +340,7 @@ strncpy(char dst[], const char src[], const unsigned int n); // 将 src[] 的前
 
 如果 ``strlen(src) >= n``，部分复制，只复制前 ``n`` 个字符（不包括尾零）
 
-``dst[]`` 的空间大于 ``min(n, strlen(src) + 1``.
+``dst[]`` 的空间大于 ``min(n, strlen(src) + 1)``.
 
 ---
 
@@ -387,4 +387,105 @@ s[2] = 'p'; // heplo
 string s2 = s; // 不必考虑溢出
 s = s + s2; // 不必考虑溢出
 s > s2; // 字符串的比较
+```
+
+---
+
+## 5.8
+
+补充
+
+---
+
+### cin 成员函数
+
+---
+
+文件结束符：表示文件结束的特殊标记
+
+一般使用 ``CTRL + Z`` 表示键盘输入文件结束符
+
+文件结束标记：判断文件是否结束的特殊标记，用宏定义 ``EOF`` (End of File) 来表示
+
+- 不同的系统 ``EOF`` 的值可能不同。
+- 一般只用于字符输入流的判断。
+
+---
+
+简单的 ``cin >> ch`` 只能读取非空白字符，不能读取空格和换行等，但是 ``cin.get()`` 可以
+
+- ``cin.get()`` 从输入流中读取一个字符并返回
+- ``cin.get(char ch)`` 从输入流中读取一个字符给 ``ch``，返回流对象自身 ``cin``
+- ``cin.get(char str[], unsigned int n, char end)`` 从输入流中读取 ``n - 1`` 个字符到数组中，遇到 ``end`` 提前结束，都返回流对象自身 ``cin``
+- ``cin.getline(char str[], unsigned int n, char end)`` 同三个参数的 ``cin.get()``
+
+---
+
+cin.get(ch) 只是一个单纯的函数执行, 对ch的值没有影响(传进去的参数是ch的一个复本)  
+但是ch = cin.get()是一个赋值操作, 对ch的值有影响。  
+采用cin.get(ch)的时候运行时输入一个^Z程序就结束了。  
+而采用cin>>的时候，输入^Z按回车程序并不结束，  
+可以继续输入,除非紧接着又输入了一个^Z，程序才结束。  
+
+---
+  
+输入缓冲是行缓冲。当从键盘上输入一串字符并按回车后，这些字符会首先被送到输入缓冲区中存储。
+
+每当按 下回车键后，``cin.get()`` 就会检测输入缓冲区中是否有了可读的数据。``cin.get()`` 还会对键盘上是否有作为流结束标志的 ``Ctrl+Z`` 或者 ``Ctrl+D`` 键按下作出检查，其检查的方式有两种：阻塞式以及非阻塞式。
+
+---
+
+阻塞式检查方式指的是只有在回车键按下之后才对此前是否有 ``Ctrl+Z`` 组合键按下进行检查，非阻塞式样指的是按下 ``Ctrl+D`` 之后立即响应的方式。如果在按 ``Ctrl+D`` 之前已经从键盘输入了字符，则 ``Ctrl+D`` 的作用就相当于回车，即把这些字符送到输入缓冲区供读取使用，此时 ``Ctrl+D`` 不再起流结束符的作用。如果按 ``Ctrl+D`` 之前没有任何键盘输入，则 ``Ctrl+D`` 就是流结束的信号。
+
+---
+
+Windows 系统中一般采用阻塞式检查 ``Ctrl+Z``、Unix/Linux 系统下一般采用非阻塞式的检查 ``Ctrl+D``。楼主是在 Windows 系统下，因此使用阻塞式的 ``Ctrl+Z`` 来标识流的结束。
+
+阻塞式方式的特点
+
+- 只有按下回车之后才有可能检测在此之前是否有 ``Ctrl+Z`` 按下
+- 如果输入缓冲区中有可读的数据则不会检测 ``Ctrl+Z``（因为有要读的数据，还不能认为到了流的末尾）。
+- ``Ctrl+Z`` 产生的不是一个普通的 ASCII 码值，也就是说它产生的不是一个字符，所以不会跟其它从键盘上输入的字符一样能够存放在输入缓冲区。
+
+从键盘上输入 ``abcd^z`` 加回车之后在 Windows 系统上是这样处理的：由于回车的作用，前面的 ``abcd`` 等字符被送到输入缓冲区（注意：上面说过了，``^z`` 不会产生字符，所以更不会存储到输入缓冲区，缓冲区中没有 ``^z`` 的存在）。这时，``cin.get()`` 检测到输入缓冲区中已经有数据存在（因此不再检查是否有 ``^z`` 的输入），于是从缓冲中读取相应的数据。如果都读取完了，则输入缓冲区重新变为 空，``cin.get()`` 等待新的输入。可见，尽管有 ``^z`` 按下，但是由于在此之前还有其它输入字符（abcd），所以流也不会结束。        
+
+因此，输入流结束的条件就是：``^z`` 之前不能有任何字符输入（回车除外），否则 ``^z`` 起不到流结束的作用。
+
+---
+
+### cout 成员函数
+
+---
+
+### C 方式输入输出与字符串
+
+---
+
+``sprintf()`` 将格式化输出的内容放入字符串中。
+
+```c
+/*put string printed in str
+- input:
+    - char str[]: string that to be contained what is printed
+    - format_string and output vars
+- return value: number of characters printed. [Same as printf()]
+- requirement: sizeof(str)/sizeof(str[0]) > return value
+*/
+#define _CRT_SECURE__NO_WARNINGS
+int sprintf(char str[], const char format_str[]<, type var ...>);
+```
+
+---
+
+``sscanf()`` 将字符串作为输入从中读取数据
+
+```c
+/*use str as input
+- input:
+    - char str[]: string as input
+    - format_string and input vars
+- return value: number of vars is input legally. [Same as printf()]
+*/
+#define _CRT_SECURE__NO_WARNINGS
+int sprintf(char str[], const char format_str[]<, type var ...>);
 ```

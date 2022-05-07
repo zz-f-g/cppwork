@@ -46,3 +46,8 @@ I put my programming homework in Spring semester 2022 in this repo.
 - [Readme-5-b8](Readme-5-b8.md) convex polygon
 - [Readme-5-b9](Readme-5-b9.md) if a matrix is a sudoku
 - [Readme-5-b10](Readme-5-b10.md) 年历
+- [Readme-5-b11](Readme-5-b11.md) 人民币大写
+- [Readme-5-b12](Readme-5-b12.md) 字符串处理函数基本实现
+- [Readme-5-b13](Readme-5-b13.md) 扫雷地图生成
+- [Readme-5-b14](Readme-5-b14.md) 扫雷地图检验
+
