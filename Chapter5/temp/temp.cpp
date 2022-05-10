@@ -1,11 +1,11 @@
 #include <iostream>
 using namespace std;
-
 int main()
 {
-    char ch;
-    const char chnstr[] = "零壹贰叁肆伍陆柒捌玖"; /* 所有输出大写 "零" ~ "玖" 的地方，只允许从这个数组中取值 */
-    printf("%c", chnstr[0]);
-    printf("%c", chnstr[0]);
+    char ch1[10], ch2[10];
+    cin.getline(ch1, 10, '*');
+    cout << ch1 << endl;
+    cin.getline(ch2, 10, '*');
+    cout << ch2 << endl;
     return 0;
 }
