@@ -1,4 +1,4 @@
-/* 班级 学号 姓名 */
+/* 2052110 自动化 郭子瞻 */
 #pragma once
 
 /* ------------------------------------------------------------------------------------------------------
@@ -9,3 +9,9 @@
 	3、可以参考 cmd_console_tools.h 的写法（认真阅读并体会）
    ------------------------------------------------------------------------------------------------------ */
 
+#define MAXSIZE 10
+
+int menu();
+void initial(int selection);
+void hanoi_recur(int n, char src, char tmp, char dst, int selection, int delay_mode);
+void exit_selection(int selection);

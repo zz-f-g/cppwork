@@ -50,4 +50,15 @@ I put my programming homework in Spring semester 2022 in this repo.
 - [Readme-5-b12](Readme-5-b12.md) 字符串处理函数基本实现
 - [Readme-5-b13](Readme-5-b13.md) 扫雷地图生成
 - [Readme-5-b14](Readme-5-b14.md) 扫雷地图检验
+- [[Chapter5/5-b15/Readme-5-b15]] 统计字符串字符类型
+- [[Chapter5/5-b16-1/Readme-5-b16]] 成绩信息排序
+- [[Chapter5/5-b17/Readme-5-b17]] 密码生成
+- [[Chapter5/5-b18/Readme-5-b18]] 密码验证
+- [Chapter5/90-b1/Readme-90-b1](Chapter5/90-b1/Readme-90-b1.md) 汉诺塔综合
 
+## Chapter6
+
+- [[Chapter6/6-b1/Readme-6-b1]] 统计字符串中的整数
+- [[Chapter6/6-b2/Readme-6-b2]] 判断回文串
+- [[Chapter6/6-b3/Readme-6-b3]] 二进制转十进制
+- [[Chapter6/6-b4/Readme-6-b4]] 字符串处理函数的基本实现（指针）

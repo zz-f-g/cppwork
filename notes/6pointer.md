@@ -225,3 +225,304 @@ for (p = a; p < a + 10; ++p)
 }
 ```
 
+---
+
+指针进行计算时不得超过数组范围，否则==越界==。
+
+指针变量和整数不能做乘除运算。指针和指针之间也不能相加。这都是没有意义的。
+
+``void *`` 指针不能进行计算。
+
+---
+
+## 6.4
+
+字符串与指针
+
+---
+
+用字符指针指向字符串
+
+```cpp
+char s[] = "string";
+string s = "string";
+char *p = "string";
+```
+
+---
+
+赋值
+
+```cpp
+char *p;
+p = "string"; // CORRECT
+*p = "string"; // ERROR!!!
+```
+
+``*p`` 代表一个字节的内存，不能赋值字符串，可以赋值字符。
+
+```cpp
+*p = 'S';
+```
+
+---
+
+对比数组
+
+```cpp
+char s[] = "string";
+s = "string"; // ERROR!!!
+strcpy(s, "string"); // #include <string.h>
+```
+
+---
+
+```cpp
+void strcpy(char *str1, const char *str2)
+{
+    while (*str2)
+    {
+        *str1++ = *str2++;
+    }
+    *str1 = '\0';
+}
+```
+
+OR
+
+```cpp
+void strcpy(char *str1, const char *str2)
+{
+    while (*str1 = *str2)
+    {
+        str1++;
+        str2++;
+    }
+}
+```
+
+---
+
+==OR==
+
+```cpp
+void strcpy(char *str1, const char *str2)
+{
+    while (*str1++ = *str2++)
+        ;
+}
+```
+
+---
+
+不好的实现方式
+
+```cpp
+void strcpy(char *str1, const char *str2)
+{
+    do
+    {
+        *str1++ = *str2++;
+    } while (*str2)
+    *str1 = '\0';
+}
+```
+
+因为如果 ``str2`` 是空字符，会发生==越界超权限==。
+
+---
+
+```cpp
+int main()
+{
+    char *p = (char*)"Hello";
+    *p = 'c';
+    return 0;
+}
+```
+
+错误：因为指针指向了==常量==。
+
+---
+
+## 6.5
+
+返回指针的函数
+
+---
+
+返回的指针可以是传入指针参数经过计算得到的指针，如
+
+```cpp
+int * fun(int * ptr)
+{
+    return ++ptr;
+}
+```
+
+---
+
+但是不能返回局部自动变量的指针：不可信。
+
+```cpp
+int * fun()
+{
+    int k = 1, *p;
+    return p;
+}
+```
+
+---
+
+## 6.6
+
+空指针
+
+---
+
+指针允许有空值 ``NULL``
+
+```cpp
+#define NULL 0
+```
+
+```cpp
+char s[] = NULL; // ERROR!!!
+char s[] = { NULL }; // empty string { '\0' }
+```
+
+```cpp
+char *s = NULL;
+strlen(s); // 不一定是 0
+```
+
+---
+
+## 6.7
+
+引用（C++ 新增）
+
+---
+
+引用的含义：变量的别名
+
+```cpp
+int a = 0, &b = a; // a, b represent the same variable.
+```
+
+引用不分配单独的空间，**和指针不同**。
+
+引用在声明时**必须初始化**：指向同类型的变量，在生存期内都**不能再指向其他的变量**。
+
+---
+
+引用不能成为数组元素
+```cpp
+int &b[3]; // [3] 的优先级高于 &
+```
+
+不能定义指向引用的指针
+```cpp
+int *&p;
+```
+
+---
+
+但是可以定义**数组的引用**、**数组元素的引用**和**指针变量的引用**。
+
+```cpp
+int a[10], (&b)[10] = a; // [10] 的优先级高于 &
+int a[10], &b = a[5];
+int a, *p = &a, *&b = p;
+```
+
+---
+
+引用的常用应用：作为函数的参数，可以起到指针的作用，改变传入实参的值。
+
+```cpp
+void swap(int &a, int &b)
+{
+    t = a;
+    a = b;
+    b = t;
+}
+```
+
+调用函数的时候也不需要像指针那样加取地址符。
+
+```cpp
+int main()
+{
+    int i = 1, j = 0;
+    swap(i, j);
+    cout << i << j << endl;
+    return 0;
+}
+```
+
+---
+
+但是如果函数中采用了引用，这时不能将对应的实参设为常量或表达式。
+
+```cpp
+swap(3, 5);
+```
+
+这一点和指针的规则是相同的。
+
+可以这样修改
+
+```cpp
+#include <iostream>
+void print_int(const int &a)
+{
+    std::cout << a << std::endl;
+}
+int main()
+{
+    print_int(15);
+    return 0;
+}
+```
+
+形参是 ``const`` 引用时可以传入常量或表达式。
+
+---
+
+## 6.8
+
+不同基类型的指针变量互相赋值
+
+---
+
+不同基类型指针不能够直接赋值，需要先进行强制类型转换。
+
+```cpp
+// g++ (Ubuntu 9.3.0-17ubuntu1~20.04) 9.3.0
+#include <iostream>
+using namespace std;
+int main()
+{
+        long l = 0xffffffff30, *p_l // long: 8 bytes
+        short *p_short = (short *)p
+        char *p_char = (char *)p_lo
+        cout << hex;
+        cout << *p_long << endl; // ffffffff30
+        cout << *p_short << endl; // ff30
+        cout << *p_char << endl; // 0
+        return 0;
+}
+```
+
+所谓“低地址低字节”、“小端序”。
+
+---
+
+可以使用相似的方法解决下面的问题：
+
+1. 如何知道 ``double`` 型数据的存储？
+2. 同一个数据大小如何知道 ``double`` 和 ``float`` 类型存储的差异？
+3. 如何知道某种编译器下两个变量相邻几个字节？
+4. 如何知道某个函数的执行代码？
+5. ......
