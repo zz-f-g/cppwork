@@ -1,9 +1,57 @@
-/* 2052110 自动化 郭子瞻 */
-#include <iostream>
-using namespace std;
-#include <string>
-#define N_PPL 10 // number of students
-#define TMP_SIZE 10
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include "5-b16.h"
+
+/*compare id string
+- input
+    char id1[]: id1
+    char id2[]: id2
+- output
+    1: id1 > id2
+    2: id1 <= id2
+*/
+int id_cmp(const char id1[], const char id2[])
+{
+    for (int i = 0; id1[i] != '\0' && id2[i] != '\0'; ++i)
+    {
+        if (id1[i] != id2[i])
+            return id1[i] - id2[i];
+    }
+    return 0; //return值可根据需要修改
+}
+
+/*copy string
+- input:
+    str1: destination string
+    str2: source string
+*/
+void str_copy(char str1[], const char str2[])
+{
+    int len = 0;
+    int i = 0;
+    while (str2[len])
+    {
+        ++len;
+    }
+    for (i = 0; i < len; ++i)
+    {
+        str1[i] = str2[i];
+    }
+    str1[i] = '\0';
+}
+
+/*exchange str
+- input:
+    char str1[]: string1
+    char str2[]: string2
+*/
+void str_exchange(char str1[], char str2[])
+{
+    char tmp[TMP_SIZE];
+    str_copy(tmp, str1);
+    str_copy(str1, str2);
+    str_copy(str2, tmp);
+}
 
 /*output ones info according to group selection
 - input:
@@ -18,14 +66,14 @@ using namespace std;
     1: student is in the group
     1: student is not in the group
 */
-int output_ones_info(const string name, const string id, int score, int group)
+int output_ones_info(const char name[], const char id[], int score, int group)
 {
     switch (group)
     {
         case 0:
             if (score < 60)
             {
-                cout << name << ' ' << id << ' ' << score << endl;
+                printf("%s %s %d\n", id, name, score);
                 return 1;
             }
             else
@@ -33,13 +81,13 @@ int output_ones_info(const string name, const string id, int score, int group)
         case 1:
             if (score >= 60)
             {
-                cout << name << ' ' << id << ' ' << score << endl;
+                printf("%s %s %d\n", id, name, score);
                 return 1;
             }
             else
                 return 0;
         case 2:
-            cout << name << ' ' << id << ' ' << score << endl;
+            printf("%s %s %d\n", id, name, score);
             return 1;
         default:
             return 0;
@@ -54,12 +102,12 @@ int output_ones_info(const string name, const string id, int score, int group)
 - output:
     int res: 1 for successful input, 0 for failing input
 */
-int input_info(string name[], string id[], int score[])
+int input_info(char name[][9], char id[][8], int score[])
 {
     for (int i = 0; i < N_PPL; ++i)
     {
-        cout << "请输入第" << i + 1 << "个人的学号、姓名、成绩" << endl;
-        cin >> id[i] >> name[i] >> score[i];
+        printf("请输入第%d个人的学号、姓名、成绩\n", i + 1);
+        scanf("%s%s%d", id[i], name[i], &score[i]);
     }
     return 1;
 }
@@ -73,10 +121,9 @@ int input_info(string name[], string id[], int score[])
         0: key is id
         1: key is score
 */
-void sort_grade(string name[], string id[], int score[], int key)
+void sort_grade(char name[][9], char id[][8], int score[], int key)
 {
     int tmp;
-    string tmp_str;
     for (int i = N_PPL - 1; i > 0; --i)
     {
         for (int j = 0; j < i; ++j)
@@ -84,17 +131,13 @@ void sort_grade(string name[], string id[], int score[], int key)
             switch (key)
             {
                 case 0:
-                    if (id[j] < id[j + 1])
+                    if (id_cmp(id[j], id[j + 1]) < 0)
                     {
                         tmp = score[j];
                         score[j] = score[j + 1];
                         score[j + 1] = tmp;
-                        tmp_str = name[j];
-                        name[j] = name[j + 1];
-                        name[j + 1] = tmp_str;
-                        tmp_str = id[j];
-                        id[j] = id[j + 1];
-                        id[j + 1] = tmp_str;
+                        str_exchange(name[j], name[j + 1]);
+                        str_exchange(id[j], id[j + 1]);
                     }
                     break;
                 case 1:
@@ -103,12 +146,8 @@ void sort_grade(string name[], string id[], int score[], int key)
                         tmp = score[j];
                         score[j] = score[j + 1];
                         score[j + 1] = tmp;
-                        tmp_str = name[j];
-                        name[j] = name[j + 1];
-                        name[j + 1] = tmp_str;
-                        tmp_str = id[j];
-                        id[j] = id[j + 1];
-                        id[j + 1] = tmp_str;
+                        str_exchange(name[j], name[j + 1]);
+                        str_exchange(id[j], id[j + 1]);
                     }
                     break;
             }
@@ -130,24 +169,24 @@ void sort_grade(string name[], string id[], int score[], int key)
         0: key is id
         1: key is score
 */
-void output_info(const string name[], const string id[], const int score[], int reverse, int group, int key)
+void output_info(const char name[][9], const char id[][8], const int score[], int reverse, int group, int key)
 {
-    cout << endl;
+    printf("\n");
     switch (group)
     {
         case 0:
-            cout <<  "不及格名单";
+            printf("不及格名单");
             break;
         case 1:
-            cout << "及格名单";
+            printf("及格名单");
             break;
         case 2:
-            cout << "全部学生";
+            printf("全部学生");
             break;
         default:
             return;
     }
-    cout << '(' << (key ? "成绩" : "学号") << (reverse ? "升序" : "降序") << ')' << endl;
+    printf("(%s%s):\n", (key ? "成绩" : "学号"), (reverse ? "升序" : "降序"));
     switch (reverse)
     {
         case 0:
@@ -159,17 +198,4 @@ void output_info(const string name[], const string id[], const int score[], int 
                 output_ones_info(name[i], id[i], score[i], group);
             break;
     }
-}
-
-int main()
-{
-    string name[N_PPL];
-    string id[N_PPL];
-    int score[N_PPL] = { 0 }; // integer score from 0 to 100
-    if (input_info(name, id, score))
-    {
-        sort_grade(name, id, score, 1);
-        output_info(name, id, score, 1, 0, 1);
-    }
-    return 0;
 }

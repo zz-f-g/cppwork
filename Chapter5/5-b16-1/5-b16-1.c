@@ -12,14 +12,34 @@
     1: id1 > id2
     2: id1 <= id2
 */
-int id_cmp(char id1[], char id2[])
+int id_cmp(const char id1[], const char id2[])
 {
-    for (int i = 0; id1[i] == '\0' && id2[i] == '\0'; ++i)
+    for (int i = 0; id1[i] != '\0' && id2[i] != '\0'; ++i)
     {
         if (id1[i] != id2[i])
-            return s1[i] - s2[i];
+            return id1[i] - id2[i];
     }
     return 0; //return值可根据需要修改
+}
+
+/*copy string
+- input:
+    str1: destination string
+    str2: source string
+*/
+void str_copy(char str1[], const char str2[])
+{
+    int len = 0;
+    int i = 0;
+    while (str2[len])
+    {
+        ++len;
+    }
+    for (i = 0; i < len; ++i)
+    {
+        str1[i] = str2[i];
+    }
+    str1[i] = '\0';
 }
 
 /*exchange str
@@ -30,12 +50,50 @@ int id_cmp(char id1[], char id2[])
 void str_exchange(char str1[], char str2[])
 {
     char tmp[TMP_SIZE];
-    for (int i = 0; tmp[i++] = str1[i++];)
-        ;
-    for (int i = 0; str1[i++] = str2[i++];)
-        ;
-    for (int i = 0; str2[i++] = tmp[i++];)
-        ;
+    str_copy(tmp, str1);
+    str_copy(str1, str2);
+    str_copy(str2, tmp);
+}
+
+/*output ones info according to group selection
+- input:
+    char name[]: name string of the student
+    char id[]: student ID string of the student
+    int score: score of the student
+    int group: the gourp of students output
+        0: fail the exam
+        1: pass the exam
+        2: all
+- output:
+    1: student is in the group
+    1: student is not in the group
+*/
+int output_ones_info(const char name[], const char id[], int score, int group)
+{
+    switch (group)
+    {
+        case 0:
+            if (score < 60)
+            {
+                printf("%s %s %d\n", name, id, score);
+                return 1;
+            }
+            else
+                return 0;
+        case 1:
+            if (score >= 60)
+            {
+                printf("%s %s %d\n", name, id, score);
+                return 1;
+            }
+            else
+                return 0;
+        case 2:
+            printf("%s %s %d\n", id, name, score);
+            return 1;
+        default:
+            return 0;
+    }
 }
 
 /*input info and assign the info to arrays
@@ -70,12 +128,12 @@ void sort_grade(char name[][9], char id[][8], int score[], int key)
     int tmp;
     for (int i = N_PPL - 1; i > 0; --i)
     {
-        for (int j = 0; j < i - 1; ++j)
+        for (int j = 0; j < i; ++j)
         {
             switch (key)
             {
                 case 0:
-                    if (id_cmp(id[j], id[j + 1]))
+                    if (id_cmp(id[j], id[j + 1]) < 0)
                     {
                         tmp = score[j];
                         score[j] = score[j + 1];
@@ -115,6 +173,7 @@ void sort_grade(char name[][9], char id[][8], int score[], int key)
 */
 void output_info(const char name[][9], const char id[][8], const int score[], int reverse, int group, int key)
 {
+    printf("\n");
     switch (group)
     {
         case 0:
@@ -124,22 +183,21 @@ void output_info(const char name[][9], const char id[][8], const int score[], in
             printf("及格名单");
             break;
         case 2:
-            printf("不及格名单");
+            printf("全部学生");
             break;
         default:
             return;
     }
-    // group ???
-    printf("(%s%s):\n", (key ? "成绩" : "学号"), (reverse ? "降序" : "升序"));
+    printf("(%s%s):\n", (key ? "成绩" : "学号"), (reverse ? "升序" : "降序"));
     switch (reverse)
     {
-        case 1:
-            for (int i = 0; i < N_PPL; ++i)
-                printf("%s %s %d\n", id[i], name[i], score[i]);
-            break;
         case 0:
-            for (int i = N_PPL - 1; i >=0; ++i)
-                printf("%s %s %d\n", id[i], name[i], score[i]);
+            for (int i = 0; i < N_PPL; ++i)
+                output_ones_info(name[i], id[i], score[i], group);
+            break;
+        case 1:
+            for (int i = N_PPL - 1; i >=0; --i)
+                output_ones_info(name[i], id[i], score[i], group);
             break;
     }
 }

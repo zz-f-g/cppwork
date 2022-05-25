@@ -22,7 +22,7 @@ int main()
     char str[MAXLEN + 2] = { 0 }; // 81 or 82?
     unsigned int len = 0;
     cout << "请输入一个长度小于80的字符串（回文串）" << endl;
-    fgets(str, MAXLEN + 2, stdin); // 81 or 82?
+    fgets(str, MAXLEN + 1, stdin); // 81 or 82?
     while (str[len] != '\n')
         ++len;
     str[len] = '\0'; // unnecessary
