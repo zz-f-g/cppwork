@@ -17,7 +17,7 @@ int main()
     for (int i = 0; i < LINE; ++i)
     {
         cout << "请输入第" << i + 1 << "行" << endl;
-        cin >> str[i];
+        cin.getline(str[i], LEN, '\n');
     }
     for (int i = 0; i < LINE; ++i)
     {
@@ -38,10 +38,10 @@ int main()
                 ++other;
         }
     }
-    cout << "大写 : " << upper << end;
-    cout << "小写 : " << lower << end;
-    cout << "数字 : " << numeral << end;
-    cout << "空格 : " << space << end;
-    cout << "其它 : " << other << end;
+    cout << "大写 : " << upper << endl;
+    cout << "小写 : " << lower << endl;
+    cout << "数字 : " << numeral << endl;
+    cout << "空格 : " << space << endl;
+    cout << "其它 : " << other << endl;
     return 0;
 }

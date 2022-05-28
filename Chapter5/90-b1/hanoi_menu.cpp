@@ -52,5 +52,6 @@ int menu()
         selection = _getch();
     }
     putchar(selection);
+    cout << endl << endl;
     return selection - '0';
 }

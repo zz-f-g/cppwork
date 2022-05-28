@@ -23,7 +23,6 @@ int main()
 {
     int n, selection, delay_mode = 0;
     char src, tmp, dst;
-
     /* demo中首先执行此句，将cmd窗口设置为40行x120列（缓冲区宽度120列，行数9000行，即cmd窗口右侧带有垂直滚动杆）*/
     cct_setconsoleborder(120, 40, 120, 9000);
     while (1)
@@ -32,7 +31,6 @@ int main()
         selection = menu();
         if (selection == 0)
             return 0;
-
         while (1)
         {
             cout << "请输入汉诺塔的层数(1-" << MAXSIZE << ")" << endl;
@@ -95,9 +93,17 @@ int main()
                 cin.ignore(32767, '\n');
             }
         }
+
+        // Variable description
+        // n: number of layers
+        // src: source      cylinder A/B/C
+        // dst: destination cylinder A/B/C
+        // tmp: temporary   cylinder A/B/C
+        // selection: in menu() 0-9
+        // delay_mode: 0-5
         if (selection <= 4)
         {
-            initial(selection);
+            initial(n, src, dst, selection, delay_mode);
             hanoi_recur(n, src, tmp, dst, selection, delay_mode);
             exit_selection(selection);
         }

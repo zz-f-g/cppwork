@@ -147,7 +147,7 @@ void output_info(const string name[], const string id[], const int score[], int 
         default:
             return;
     }
-    cout << '(' << (key ? "³É¼¨" : "Ñ§ºÅ") << (reverse ? "ÉýÐò" : "½µÐò") << ')' << endl;
+    cout << '(' << (key ? "³É¼¨" : "Ñ§ºÅ") << (reverse ? "ÉýÐò" : "½µÐò") << "):" << endl;
     switch (reverse)
     {
         case 0:

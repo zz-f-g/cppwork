@@ -98,7 +98,7 @@ void sort_grade(string name[], string id[], int score[], int key)
                     }
                     break;
                 case 1:
-                    if (score[j] < score[j + 1])
+                    if (score[j] > score[j + 1])
                     {
                         tmp = score[j];
                         score[j] = score[j + 1];
@@ -147,15 +147,15 @@ void output_info(const string name[], const string id[], const int score[], int 
         default:
             return;
     }
-    cout << '(' << (key ? "³É¼¨" : "Ñ§ºÅ") << (reverse ? "ÉýÐò" : "½µÐò") << ')' << endl;
+    cout << '(' << (key ? "³É¼¨" : "Ñ§ºÅ") << (reverse ? "ÉýÐò" : "½µÐò") << "):" << endl;
     switch (reverse)
     {
         case 0:
-            for (int i = 0; i < N_PPL; ++i)
+            for (int i = N_PPL - 1; i >=0; --i)
                 output_ones_info(name[i], id[i], score[i], group);
             break;
         case 1:
-            for (int i = N_PPL - 1; i >=0; --i)
+            for (int i = 0; i < N_PPL; ++i)
                 output_ones_info(name[i], id[i], score[i], group);
             break;
     }

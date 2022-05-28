@@ -1,79 +1,86 @@
 /* 2052110 自动化 郭子瞻 */
 #include <iostream>
 #include <iomanip>
-#include <cstdio>
-#include <ctime>
 #include <conio.h>  //用getch，因此不需要支持Linux
 #include <string.h> //Dev/CB的strlen需要
 using namespace std;
-#define START 1970
+#define STRSIZE 30
+#define MAXCOMB 20
 
-struct tj_time
+struct dish
 {
-    int tj_year;   //表示年份
-    int tj_month;  //表示月(1-12)
-    int tj_day;    //表示日(1-28/29/30/31)
-    int tj_hour;   //表示小时(0-23)
-    int tj_minute; //表示分(0-59)
-    int tj_second; //表示秒(0-59)
+    char id;
+    char name[STRSIZE];
+    double price;
+    int number;
 };
-/* if the year is leap year
- */
-int isleap(int year)
+
+struct SPECIAL
 {
-    return (year % 4 == 0) && (year % 100 != 0) || (year % 400 == 0);
+    char ids[MAXCOMB];
+    char name[STRSIZE];
+    double price;
+};
+
+const struct dish list[] = {
+    {'A', "香辣鸡腿堡", 18.5},
+    {'B', "劲脆鸡腿堡", 18.5},
+    {'C', "新奥尔良烤鸡腿堡", 19},
+    {'D', "老北京鸡肉卷", 17},
+    {'E', "川辣嫩牛卷", 19.5},
+    {'F', "深海鳕鱼堡", 18.5},
+    {'G', "吮指原味鸡(1块)", 11.5},
+    {'H', "芝芝肉酥热辣脆皮鸡", 12.5},
+    {'I', "新奥尔良烤翅(2块)", 12.5},
+    {'J', "劲爆鸡米花", 11.5},
+    {'K', "香辣鸡翅(2块)", 12.0},
+    {'L', "藤椒无骨大鸡柳(2块)", 12.5},
+    {'M', "鲜蔬色拉", 13},
+    {'N', "薯条(小)", 9},
+    {'O', "薯条(中)", 12},
+    {'P', "薯条(大)", 14},
+    {'Q', "芙蓉蔬荟汤", 9},
+    {'R', "原味花筒冰激凌", 6},
+    {'S', "醇香土豆泥", 7},
+    {'T', "香甜粟米棒", 9.0},
+    {'U', "葡式蛋挞", 8.0},
+    {'V', "百事可乐(小)", 7.0},
+    {'W', "百事可乐(中)", 9.5},
+    {'X', "百事可乐(大)", 11.5},
+    {'Y', "九珍果汁饮料", 12.5},
+    {'Z', "纯纯玉米饮", 11.5},
+    {'\0', NULL, 0}};
+
+const struct SPECIAL special[] = {
+    //	{"ANV", "香辣鸡腿堡工作日午餐",  24}, //如果有需要，放开此项，注释掉下一行的“BMV”优惠，观察优惠菜单是否发生了变化
+    {"BMV", "劲脆鸡腿堡超值套餐", 26},
+    {"ABCGGIIKKOUWWW", "超值全家桶", 115},
+    {"KIIRRJUWW", "缤纷小吃桶", 65},
+    {"JJ", "劲爆鸡米花(2份小)", 12.5},
+    {NULL, NULL, 0}};
+
+void print_dish(struct KFC dish)
+{
+    cout << setiosflags(ios::left);
+    cout << ' ' << dish.id << ' ' << setw(20) << dish.name << setw(5) << dish.price;
 }
 
-/* get the day from 1970-01-01 00:00:00 to 00:00:00 of this day
-- input:
-    int year: start from 1970
-    int month: 1-12
-    int day
-*/
-int get_day(int year, int month, int day)
+void menu(char *order_str)
 {
-    const int day_in_month[13] = {0, 31, 28 + isleap(year),
-                                  31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-    int res = 0;
-    for (int i = START; i < year; ++i)
-        res += 365 + isleap(i);
-    for (int i = 1; i < month; ++i)
-        res += day_in_month[i];
-    return (res += day - 1);
-}
-
-/* get the date from 1970-01-01
-- input:
-    int day: number of days from 1970-01-01
-- output:
-    tj_time * time
-*/
-void tj_day_convert(tj_time *time, int day)
-{
-    int year = day / 366 + START;
-    int month = 1;
-    while (get_day(year, 1, 1) > day)
-        ++year;
-    time->tj_year = --year;
-    while (get_day(year, month, 1) > day)
-        ++month;
-    time->tj_month = --month;
-    time->tj_day = day - get_day(year, month, 1) + 1;
+    cout << "=============================================================" << endl;
+    cout << "                      KFC 2021秋季菜单" << endl;
+    cout << "=============================================================" << endl;
 }
 
 int main()
 {
-    struct tj_time time, *tp = &time;
-    time.tj_hour = 0;
-    time.tj_minute = 0;
-    time.tj_second = 0;
-    tj_day_convert(&time, 365);
-    cout << setfill('0')
-         << setw(4) << tp->tj_year << '-'
-         << setw(2) << tp->tj_month << '-'
-         << setw(2) << tp->tj_day << ' '
-         << setw(2) << tp->tj_hour << ':'
-         << setw(2) << tp->tj_minute << ':'
-         << setw(2) << tp->tj_second << endl;
+    int ifctn = 1;
+    char order_str[MAXCOMB];
+    while (ifctn)
+    {
+        system("cls");
+        system("mode con cols=120 lines=35");
+        menu(order_str);
+    }
     return 0;
 }

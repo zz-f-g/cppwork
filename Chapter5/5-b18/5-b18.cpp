@@ -4,6 +4,16 @@
 using namespace std;
 #define N_KINDS 4
 
+int is_in_array(const char arr[], char ch, int len)
+{
+    for (int i = 0; i < len; ++i)
+    {
+        if (ch == arr[i])
+            return 1;
+    }
+    return 0;
+}
+
 /*get the sum of a slice of certain integer array
 - input:
     int arr[]
@@ -28,9 +38,14 @@ int getsum(const int arr[], int len)
         str_info[1]: lower letter (>=2)
         str_info[2]: numeral (>=2)
         str_info[3]: other chars (>=2)
+- output:
+    int: 1 for no other chars
 */
-void getinfo(int str_info[], const char key[])
+int getinfo(int str_info[], const char key[])
 {
+    const char other[] = "!@#$%^&*-_=+,.?";
+    for (int i = 0; i < N_KINDS; ++i)
+        str_info[i] = 0;
     for (int i = 0; key[i]; ++i)
     {
         if (key[i] >= 'A' && key[i] <= 'Z')
@@ -39,9 +54,12 @@ void getinfo(int str_info[], const char key[])
             ++str_info[1];
         else if (key[i] >= '0' && key[i] <= '9')
             ++str_info[2];
-        else
+        else if (is_in_array(other, key[i], 15))
             ++str_info[3];
+        else
+            return 0;
     }
+    return 1;
 }
 
 int checkinfo(const int str_info[], const int n_chars[], int len)
@@ -60,7 +78,6 @@ int main()
 {
     int flag = 1;
     char key[17];
-    int tmp;
     int len = 0;
     int n_chars[N_KINDS] = { 0 };
     int str_info[N_KINDS] = { 0 };
