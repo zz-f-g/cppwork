@@ -12,6 +12,7 @@
 #define MAXSIZE 10
 
 int menu();
-void initial(int n, char src, char dst, int selection, int delay_mode);
+void initial(int n, char src, char tmp, char dst, int selection, int delay_mode);
 void hanoi_recur(int n, char src, char tmp, char dst, int selection, int delay_mode);
 void exit_selection(int selection);
+void init_cylinders();

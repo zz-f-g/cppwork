@@ -29,6 +29,13 @@ int main()
     {
         cct_cls();
         selection = menu();
+        if (selection == 5)
+        {
+            cct_cls();
+            init_cylinders();
+            exit_selection(selection);
+            continue;
+        }
         if (selection == 0)
             return 0;
         while (1)
@@ -101,11 +108,24 @@ int main()
         // tmp: temporary   cylinder A/B/C
         // selection: in menu() 0-9
         // delay_mode: 0-5
-        if (selection <= 4)
+        switch (selection)
         {
-            initial(n, src, dst, selection, delay_mode);
-            hanoi_recur(n, src, tmp, dst, selection, delay_mode);
-            exit_selection(selection);
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 8:
+                initial(n, src, tmp, dst, selection, delay_mode);
+                hanoi_recur(n, src, tmp, dst, selection, delay_mode);
+                exit_selection(selection);
+                break;
+            case 6:
+            case 7:
+            case 9:
+                initial(n, src, tmp, dst, selection, delay_mode);
+                exit_selection(selection);
+                break;
         }
     }
+    return 0;
 }
