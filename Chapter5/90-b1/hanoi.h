@@ -16,3 +16,7 @@ void initial(int n, char src, char tmp, char dst, int selection, int delay_mode)
 void hanoi_recur(int n, char src, char tmp, char dst, int selection, int delay_mode);
 void exit_selection(int selection);
 void init_cylinders();
+void get_n(int &n);
+void get_src(char &src);
+void get_dst(char src, char &dst);
+void get_delay(int &delay_mode);

@@ -85,6 +85,8 @@ main["main()"] ---> initial["initial()"] ---> hanoi["hanoi_recur()"] ---> exit["
 hanoi ---> act["action_step()"] ---> hanoi
 ```
 
+在选项 9 的用户指令识别模块，也用到了类似的栈来储存用户输入的字符。
+
 ## 主要功能实现
 
 程序中较为复杂的功能实现有：
@@ -125,7 +127,25 @@ act["action_step()"] ---> mv["move_plate()"] ---> mvstep["move_plate_bystep"] --
 
 ### 用户指令识别
 
-略
+函数调用关系如图所示
+
+```mermaid
+flowchart TD
+init["initial()"] ---> play["play()"] ---> cmdi["command_input()"] & cmde["command_execute()"] ---> clr["clear_command_buffer()"]
+cmde ---> cmdi
+```
+
+在通用的函数 ``initial()`` 中调用新定义的函数 ``play()`` 循环地读取用户的指令、加以判断并执行。在这中又定义了单步指令输入函数 ``command_input()`` 和单步指令执行函数 ``command_execute()``。此外还定义了一个经常使用的函数 ``clear_command_buffer()``，用于清空某一块终端的显示。
+
+需要特别说明的是，``command_input()`` 函数不同于普通的 ``cin`` 输入流，所有不可显示的字符都是无效的，甚至不会回显。因此这里组合利用了 ``_getch()`` 和 ``putchar()`` 函数，在不同的条件下可以实现和 demo 一致的效果。
+
+```mermaid
+flowchart TD
+ch["ch = _getch()"] ---> overflow["top == cmd_buffer_size"] & notview["不可显示"] & other["putchar(ch)"]
+overflow ---> return0["return 0"]
+notview & other ---> ch
+other ---> r["return cmd"]
+```
 
 ## 调试问题
 
@@ -162,6 +182,10 @@ void initial(int n, char src, char tmp, char dst, int selection, int delay_mode)
 void hanoi_recur(int n, char src, char tmp, char dst, int selection, int delay_mode);
 void exit_selection(int selection);
 void init_cylinders();
+void get_n(int &n);
+void get_src(char &src);
+void get_dst(char src, char &dst);
+void get_delay(int &delay_mode);
 ```
 
 ```cpp
@@ -220,6 +244,7 @@ int main()
 {
     int n, selection, delay_mode = 0;
     char src, tmp, dst;
+    /* demo中首先执行此句，将cmd窗口设置为40行x120列（缓冲区宽度120列，行数9000行，即cmd窗口右侧带有垂直滚动杆）*/
     cct_setconsoleborder(120, 40, 120, 9000);
     while (1)
     {
@@ -234,68 +259,12 @@ int main()
         }
         if (selection == 0)
             return 0;
-        while (1)
-        {
-            cout << "请输入汉诺塔的层数(1-" << MAXSIZE << ")" << endl;
-            cin >> n;
-            if (cin.fail())
-                cin.clear();
-            else if (n >= 1 && n <= MAXSIZE)
-            {
-                cin.ignore(32767, '\n');
-                break;
-            }
-            cin.ignore(32767, '\n');
-        }
-        while (1)
-        {
-            cout << "请输入起始柱(A-C)" << endl;
-            cin >> src;
-            if (cin.fail())
-                cin.clear();
-            else if (src == 'A' || src == 'B' || src == 'C' || src == 'a' || src == 'b' || src == 'c')
-            {
-                if (src == 'a' || src == 'b' || src == 'c')
-                    src += 'A' - 'a';
-                cin.ignore(32767, '\n');
-                break;
-            }
-            cin.ignore(32767, '\n');
-        }
-        while (1)
-        {
-            cout << "请输入目标柱(A-C)" << endl;
-            cin >> dst;
-            if (cin.fail())
-                cin.clear();
-            else if (dst == 'A' || dst == 'B' || dst == 'C' || dst == 'a' || dst == 'b' || dst == 'c')
-            {
-                if (dst == 'a' || dst == 'b' || dst == 'c')
-                    dst += 'A' - 'a';
-                cin.ignore(32767, '\n');
-                if (dst == src)
-                {
-                    cout << "目标柱(" << src << ")不能与起始柱(" << src << ")相同" << endl;
-                    continue;
-                }
-                break;
-            }
-            cin.ignore(32767, '\n');
-        }
+        get_n(n);
+        get_src(src);
+        get_dst(src, dst);
         tmp = 'A' + 'B' + 'C' - src - dst;
         if (selection == 4 || selection == 8)
-        {
-            while (1)
-            {
-                cout << "请输入移动速度(0-5: 0-按回车单步演示 1-延时最长 5-延时最短)" << endl;
-                cin >> delay_mode;
-                if (cin.fail())
-                    cin.clear();
-                else if (delay_mode >= 0 && delay_mode <= 5)
-                    break;
-                cin.ignore(32767, '\n');
-            }
-        }
+            get_delay(delay_mode);
         switch (selection)
         {
             case 1:
@@ -320,7 +289,6 @@ int main()
 ```
 
 ```cpp
-// hanoi_multiple_solutions.cpp
 #include <conio.h>
 #include <iomanip>
 #include "hanoi.h"
@@ -331,6 +299,7 @@ using namespace std;
 /* macros in menu4 */
 #define y_bottom 11
 #define y_info 19
+
 /* macros in menu5,6 */
 #define CLR_CYLINDERS COLOR_HYELLOW
 #define y_delta 15
@@ -340,14 +309,24 @@ using namespace std;
 #define height_cylinder 12
 #define width_half_pedestal 11
 #define width_interval 32
+
 /* macros in menu 9 */
 #define cmd_buffer_size 19
 #define x_cmd 60
 #define y_cmd y_info + y_delta + 4
+
 /* global variables */
 static unsigned int cnt = 1;
 static int tops[3] = {0};
 static int state[3][MAXSIZE] = {0};
+
+/* functions for menu3
+init_stack
+print_row_stack
+init_state
+move_state
+print_row_state
+*/
 
 /*Initialize the stack by giving top ptr
 - input:
@@ -421,6 +400,12 @@ void print_row_state()
     print_row_stack(state[2], tops[2]);
     cout << endl;
 }
+
+/* functions for menu4
+init_col_print
+move_col_print
+wait
+*/
 
 /*Print initial information
 - input:
@@ -503,6 +488,14 @@ void wait(int delay_mode)
             ch = _getch();
     }
 }
+
+/* functions for menu5, 6, 7, 8
+init_cylinders
+draw_plate
+init_plates
+move_plate_bystep
+move_plate
+*/
 
 /* initialize the 3 cylinders
 */
@@ -644,6 +637,14 @@ void move_plate(char src, char dst, int delay_mode)
     cct_gotoxy(0, y_info + y_delta);
 }
 
+/* functions for menu9
+clear_cmd_buffer
+command_input
+command_execute
+is_end
+play
+*/
+
 void clear_cmd_buffer(int len)
 {
     for (int i = 0; i < len; ++i)
@@ -654,7 +655,8 @@ void clear_cmd_buffer(int len)
 /* input legal command
 - output:
     int command: ternary number, src & dst
-        00(0): Q
+        -1: Q
+        00(0): invalid
         01(1): A -> B
         02(2): A -> C
         10(3): B -> A
@@ -667,57 +669,64 @@ int command_input()
     char ch = '\0';
     int top = 0;
     char str[cmd_buffer_size] = { 0 };
-    while (1)
+    while (ch != '\r')
     {
-        while ('\r' != (ch = _getch()))
+        if (ch <= 32 || ch >= 127)
         {
-            if (ch <= ' ' || ch >= '\b')
-                continue;
-            if (top == cmd_buffer_size)
-            {
-                clear_cmd_buffer(cmd_buffer_size);
-                continue;
-            }
-            str[top++] = ch;
+            ch = _getch();
+            continue;
         }
-        if (top == 2)
+        if (top == cmd_buffer_size)
         {
-            if (str[0] >= 'A' && str[0] <= 'C' || str[0] >= 'a' && str[0] <= 'c')
+            cct_gotoxy(x_cmd, y_cmd);
+            clear_cmd_buffer(cmd_buffer_size);
+            return 0;
+        }
+        putchar(ch);
+        str[top++] = ch;
+        ch = _getch();
+    }
+    if (top == 2)
+    {
+        if (str[0] >= 'A' && str[0] <= 'C' || str[0] >= 'a' && str[0] <= 'c')
+        {
+            str[0] += (str[0] >= 'a' && str[0] <= 'c') ? 'A' - 'a' : 0;
+            if (str[1] >= 'A' && str[1] <= 'C' || str[1] >= 'a' && str[1] <= 'c')
             {
-                str[0] += (str[0] >= 'a' && str[0] <= 'c') ? 'A' - 'a' : 0;
-                if (str[1] >= 'A' && str[1] <= 'C' || str[1] >= 'a' && str[1] <= 'c')
-                {
-                    str[1] += (str[1] >= 'a' && str[1] <= 'c') ? 'A' - 'a' : 0;
-                    if (str[1] == str[0])
-                        continue;
+                str[1] += (str[1] >= 'a' && str[1] <= 'c') ? 'A' - 'a' : 0;
+                if (str[1] != str[0])
                     return (int)(str[0] - 'A') * 3 + (int)(str[1] - 'A');
-                }
             }
-        }
-        else if (top == 1)
-        {
-            if (str[0] == 'Q' && str[0] == 'q')
-                return 0;
         }
     }
+    else if (top == 1)
+    {
+        if (str[0] == 'Q' || str[0] == 'q')
+        {
+            return -1;
+        }
+    }
+    cct_gotoxy(x_cmd, y_cmd);
+    clear_cmd_buffer(cmd_buffer_size);
+    return 0;
 }
 
 int command_execute(int command)
 {
-    if (command == 0)
-        return 0;
     char src = 'A' + (char)(command / 3);
     char dst = 'A' + (char)(command % 3);
-    if (tops[src - 'A'] == '0')
+    if (tops[src - 'A'] == 0)
     {
-        cout << endl << "源柱为空!";
+        cout << endl
+             << "源柱为空!";
         for (int i = 0; i < 4; ++i)
             wait(1);
         cct_gotoxy(0, y_cmd + 1);
         clear_cmd_buffer(cmd_buffer_size);
         clear_cmd_buffer(cmd_buffer_size);
+        return 0;
     }
-    if (state[src - 'A'][tops[src - 'A'] - 1] > state[dst - 'A'][tops[dst - 'A'] - 1])
+    if (tops[dst - 'A'] >= 1 && state[src - 'A'][tops[src - 'A'] - 1] > state[dst - 'A'][tops[dst - 'A'] - 1])
     {
         cout << endl
              << "大盘压小盘，非法移动!";
@@ -726,6 +735,7 @@ int command_execute(int command)
         cct_gotoxy(0, y_cmd + 1);
         clear_cmd_buffer(cmd_buffer_size * 2);
         clear_cmd_buffer(cmd_buffer_size);
+        return 0;
     }
     move_plate(src, dst, 3);
     cout << "第" << setw(4) << cnt << " 步(" << setw(2)
@@ -747,22 +757,33 @@ int is_end(int n, char dst)
 
 void play(int n, char dst)
 {
+    int cmd = 0;
     cct_gotoxy(0, y_cmd);
     cout << "请输入移动的柱号(命令形式：AC=A顶端的盘子移动到C，Q=退出) ：";
     while (!is_end(n, dst))
     {
+        cmd = 0;
         cct_gotoxy(x_cmd, y_cmd);
-        if (command_execute(command_input()))
-            continue;
-        else
+        while (0 == cmd)
         {
-            cout << endl
-                 << "游戏中止！！！！！";
+            cmd = command_input();
+            if (cmd == -1)
+            {
+                cout << endl
+                     << "游戏中止！！！！！";
+                return;
+            }
         }
+        command_execute(cmd);
     }
     cout << endl
          << "游戏结束！！！！！";
 }
+
+/* recursion function and its subsidary
+action_step
+hanoi_recur
+*/
 
 /*action of each step in recursion
 - input:
@@ -842,6 +863,11 @@ void hanoi_recur(int n, char src, char tmp, char dst, int selection, int delay_m
     }
 }
 
+/* basic function called in hanoi_main.cpp
+initial
+exit_selection
+*/
+
 /*initial print
 - input:
     int selection: selection in menu (1-9)
@@ -896,7 +922,9 @@ void initial(int n, char src, char tmp, char dst, int selection, int delay_mode)
             init_col_print(n, src, 8);
             init_plates(n, src);
             play(n, dst);
-            cct_gotoxy(0, y_info + y_delta + 8);
+            cout << endl
+                 << endl
+                 << endl;
             break;
         default:
             break;
@@ -913,9 +941,83 @@ void exit_selection(int selection)
     tops[0] = 0;
     tops[1] = 0;
     tops[2] = 0;
-    if (selection > 4)
+    if (selection > 4 && selection < 9)
         cct_gotoxy(0, y_exit + (selection == 8 ? y_delta : 0));
     cout << "按回车键继续";
     wait(0);
+}
+
+void get_n(int &n)
+{
+    while (1)
+    {
+        cout << "请输入汉诺塔的层数(1-" << MAXSIZE << ")" << endl;
+        cin >> n;
+        if (cin.fail())
+            cin.clear();
+        else if (n >= 1 && n <= MAXSIZE)
+        {
+            cin.ignore(32767, '\n');
+            break;
+        }
+        cin.ignore(32767, '\n');
+    }
+}
+
+void get_src(char &src)
+{
+    while (1)
+    {
+        cout << "请输入起始柱(A-C)" << endl;
+        cin >> src;
+        if (cin.fail())
+            cin.clear();
+        else if (src == 'A' || src == 'B' || src == 'C' || src == 'a' || src == 'b' || src == 'c')
+        {
+            if (src == 'a' || src == 'b' || src == 'c')
+                src += 'A' - 'a';
+            cin.ignore(32767, '\n');
+            break;
+        }
+        cin.ignore(32767, '\n');
+    }
+}
+
+void get_dst(char src, char &dst)
+{
+    while (1)
+    {
+        cout << "请输入目标柱(A-C)" << endl;
+        cin >> dst;
+        if (cin.fail())
+            cin.clear();
+        else if (dst == 'A' || dst == 'B' || dst == 'C' || dst == 'a' || dst == 'b' || dst == 'c')
+        {
+            if (dst == 'a' || dst == 'b' || dst == 'c')
+                dst += 'A' - 'a';
+            cin.ignore(32767, '\n');
+            if (dst == src)
+            {
+                cout << "目标柱(" << src << ")不能与起始柱(" << src << ")相同" << endl;
+                continue;
+            }
+            break;
+        }
+        cin.ignore(32767, '\n');
+    }
+}
+
+void get_delay(int &delay_mode)
+{
+    while (1)
+    {
+        cout << "请输入移动速度(0-5: 0-按回车单步演示 1-延时最长 5-延时最短)" << endl;
+        cin >> delay_mode;
+        if (cin.fail())
+            cin.clear();
+        else if (delay_mode >= 0 && delay_mode <= 5)
+            break;
+        cin.ignore(32767, '\n');
+    }
 }
 ```

@@ -1,20 +1,24 @@
 /* 2052110 自动化 郭子瞻 */
-
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
+#include <conio.h>
 #include <iomanip>
 #include <cstring>
+#define MAXSIZE 100
 using namespace std;
 
-struct KFC {
-	char id;
-	const char* name;
-	float price;
+struct KFC
+{
+    char id;
+    const char *name;
+    float price;
 };
 
-struct SPECIAL {
-	const char* id;
-	const char* name;
-	float price;
+struct SPECIAL
+{
+    const char *id;
+    const char *name;
+    float price;
 };
 
 const struct KFC list[] = {
@@ -54,35 +58,47 @@ const struct SPECIAL special[] = {
     {"JJ", "劲爆鸡米花(2份小)", 12.5},
     {NULL, NULL, 0}};
 
-void menu(KFC * ptr_K, SPECIAL * ptr_S)
+const int n_dishes = sizeof(list) / sizeof(list[0]);
+
+int get_index(char id)
 {
+    for (int i = 0; i < n_dishes; ++i)
+    {
+        if (list[i].id == id)
+            return i;
+    }
+    return -1;
+}
+
+void menu()
+{
+    const KFC *pK = list;
+    const SPECIAL *pS = special;
     int newline = 0;
     system("cls");
     cout << "=============================================================" << endl;
     cout << "                      KFC 2021秋季菜单" << endl;
     cout << "=============================================================" << endl;
     cout << setiosflags(ios::left);
-    while (ptr_K->id != 0)
+    while (pK->id)
     {
-        cout << " " << ptr_K->id << " " << setw(21) << ptr_K->name << setw(5) << ptr_K->price
-             << (newline ? "\n" : " | ");
+        cout << " " << pK->id << " " << setw(21) << pK->name << setw(5) << pK->price;
+        cout << (newline ? "\n" : " | ");
         newline = !newline;
-        ptr_K++;
+        pK++;
     }
     cout << "【优惠信息】：" << endl
          << endl;
-    while (ptr_S->id)
+    while (pS->id)
     {
-        cout << ptr_S->name << "=";
-        for (unsigned int i = 0; i < strlen(ptr_S->id); i++)
+        cout << pS->name << "=";
+        for (unsigned int i = 0; i < strlen(pS->id); i++)
         {
-            cout << "+" << name_info[ptr_S->id[i] - 'A'];
+            cout << (i == 0 ? "" : "+") << list[get_index(pS->id[i])].name;
         }
-        cout << "=" << ptr_S->price;
-        cout << endl;
-        ptr_S++;
+        cout << "=" << pS->price << endl;
+        pS++;
     }
-
     cout << "\n【输入规则说明】：\n";
     cout << "ANV=香辣鸡腿堡+薯条(小)+百事可乐(小) / akaak=香辣鸡腿堡*3+香辣鸡翅*2" << endl;
     cout << "字母不分大小写，不限顺序，单独输入0则退出程序" << endl;
@@ -90,104 +106,122 @@ void menu(KFC * ptr_K, SPECIAL * ptr_S)
     cout << "请点单：";
 }
 
+int cmd_input(char *cmd)
+{
+    int flag = 1;
+    while (1)
+    {
+        cin >> cmd;
+        for (int i = 0; cmd[i]; ++i)
+        {
+            if (!(cmd[i] >= 'A' && cmd[i] <= 'Z' || cmd[i] >= 'a' && cmd[i] <= 'z'))
+            {
+                flag = 0;
+                break;
+            }
+        }
+        if (flag)
+            return 1;
+        if (cmd[0] == '0' && cmd[1] == '\0')
+            return 0;
+        else
+        {
+            cout << "输入错误，按任意键继续." << endl;
+            getchar();
+            _getch();
+            menu();
+        }
+    }
+}
+
 int main()
 {
-	const KFC* kp = list;
-	const SPECIAL* sp = special;
-	system("mode con cols=120 lines=35");
-	char a[1000];
-	char name_info[26][100] = { 0 };
+    const KFC *kp = list;
+    const SPECIAL *sp = special;
+    system("mode con cols=120 lines=35");
+    char cmd[MAXSIZE] = {'\0'}, *p_cmd = cmd;
 
-    while (kp->id != 0) {
-		strcpy(name_info[kp->id - 'A'],kp->name);
-		kp++;
-	}
+    while (1)
+    {
+        cmd[0] = '\0';
+        p_cmd = cmd;
+        int order[n_dishes] = {0};
+        int order_ori[n_dishes] = {0};
+        float price_tot = 0;
+        kp = list;
+        sp = special;
+        menu();
+        if (!cmd_input(cmd))
+        {
+            return 0;
+        }
+        while (*p_cmd)
+        {
+            *p_cmd += ((*p_cmd >= 'a' && *p_cmd <= 'z') ? 'A' - 'a' : 0);
+            order_ori[*p_cmd - 'A'] = ++order[*p_cmd - 'A'];
+            p_cmd++;
+        }
 
-	while (1) {
-		kp = list;
-		sp = special;
-        menu(list, special);
+        while (sp->id)
+        {
+            while (1)
+            {
+                bool flag = true;
+                for (unsigned int i = 0; i < strlen(sp->id); i++)
+                    order[sp->id[i] - 'A']--;
+                for (int i = 0; i < n_dishes; i++)
+                {
+                    if (order[i] < 0)
+                        flag = false;
+                }
 
-        a[0] = 0;
-        cin >> a;
-		if (a[0] == '0')
-			break;
+                if (flag)
+                {
+                    price_tot += sp->price;
+                    break;
+                }
+                else
+                {
+                    for (unsigned int i = 0; i < strlen(sp->id); i++)
+                        order[sp->id[i] - 'A']++;
+                    break;
+                }
+            }
+            sp++;
+        }
 
-		char* p = a;
-		int diandan[26], diandan_ori[26];
-		float price = 0;
-		for (int i = 0; i < 26; i++) {
-			diandan_ori[i] = diandan[i] = 0;
-		}
+        while (kp->id)
+        {
+            while (1)
+            {
+                if (order[kp->id - 'A'] > 0)
+                {
+                    order[kp->id - 'A']--;
+                    price_tot += kp->price;
+                }
+                else
+                    break;
+            }
+            kp++;
+        }
 
-		while (*p != 0) {
-			if (*p >= 'a' && *p <= 'z') {
-				*p -= 0x20;
-			}
+        cout << "您的点餐=";
+        for (char i = 'A'; i <= 'Z'; i += (char)1)
+        {
+            if (order_ori[i - 'A'])
+            {
+                if (order_ori[i - 'A'] == 1)
+                    cout << "+" << list[get_index(i)].name;
+                else
+                    cout << "+" << list[get_index(i)].name << "*" << order_ori[i - 'A'];
+            }
+        }
+        cout << endl;
+        cout << "共计：" << price_tot << "元" << endl;
 
-			diandan_ori[*p - 'A'] = ++diandan[*p - 'A'];
-			p++;
-		}
-
-
-		kp = list;
-		sp = special;
-
-
-		while (sp->id != NULL) {
-			while (1) {
-				bool flag = true;
-				for (unsigned int i = 0; i < strlen(sp->id); i++) {
-					diandan[sp->id[i] - 'A']--;
-				}
-
-				for (int i = 0; i < 26; i++) {
-					if (diandan[i] < 0) {
-						flag = false;
-					}
-				}
-
-				if (flag == true) {
-					price += sp->price;
-				}
-				else {
-					for (unsigned int i = 0; i < strlen(sp->id); i++) {
-						diandan[sp->id[i] - 'A']++;
-					}
-					break;
-				}
-			}
-			sp++;
-		}
-
-		while (kp->id != 0) {
-			while (1) {
-				if (diandan[kp->id - 'A'] > 0) {
-					diandan[kp->id - 'A']--;
-					price += kp->price;
-				}
-				else {
-					break;
-				}
-			}
-			kp++;
-		}
-
-		cout << "您的点餐=";
-		for (int i = 0; i < 26; i++) {
-			if (diandan_ori[i] != 0) {
-				if (diandan[i] == 1) {
-					cout << "+" << name_info[i];
-				}
-				else {
-					cout <<"+"<<name_info[i] << "*" << diandan_ori[i];
-				}
-			}
-		}
-		cout << endl;
-		cout << "共计：" << price << "元" << endl;
-
-		cout << "点餐完成，按任意键继续" << endl;
-		system("pause");
-	}
+        cout << "点餐完成，按任意键继续" << endl;
+        getchar();
+        _getch();
+    }
+    return 0;
 }

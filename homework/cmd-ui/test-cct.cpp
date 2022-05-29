@@ -38,46 +38,65 @@ void clear_cmd_buffer(int len)
     cct_gotoxy(x_cmd, y_cmd);
 }
 
+/* input legal command
+- output:
+    int command: ternary number, src & dst
+        -1: Q
+        00(0): invalid
+        01(1): A -> B
+        02(2): A -> C
+        10(3): B -> A
+        12(5): B -> C
+        20(6): C -> A
+        21(7): C -> B
+*/
 int command_input()
 {
     char ch = '\0';
     int top = 0;
     char str[cmd_buffer_size] = { 0 };
-    while (1)
+    while (ch != '\r')
     {
-        while ('\r' != (ch = _getch()))
+        if (ch <= 32 || ch >= 127)
         {
-            if (ch <= ' ' || ch >= 127)
-                continue;
-            if (top == cmd_buffer_size)
-            {
-                cct_gotoxy(x_cmd, y_cmd);
-                clear_cmd_buffer(cmd_buffer_size);
-                continue;
-            }
-            putchar(ch);
-            str[top++] = ch;
+            ch = _getch();
+            continue;
         }
-        if (top == 2)
+        if (top == cmd_buffer_size)
         {
-            if (str[0] >= 'A' && str[0] <= 'C' || str[0] >= 'a' && str[0] <= 'c')
+            cct_gotoxy(x_cmd, y_cmd);
+            clear_cmd_buffer(cmd_buffer_size);
+            return 0;
+        }
+        putchar(ch);
+        ch = _getch();
+        ++top;
+    }
+    if (top == 2)
+    {
+        if (str[0] >= 'A' && str[0] <= 'C' || str[0] >= 'a' && str[0] <= 'c')
+        {
+            str[0] += (str[0] >= 'a' && str[0] <= 'c') ? 'A' - 'a' : 0;
+            if (str[1] >= 'A' && str[1] <= 'C' || str[1] >= 'a' && str[1] <= 'c')
             {
-                str[0] += (str[0] >= 'a' && str[0] <= 'c') ? 'A' - 'a' : 0;
-                if (str[1] >= 'A' && str[1] <= 'C' || str[1] >= 'a' && str[1] <= 'c')
-                {
-                    str[1] += (str[1] >= 'a' && str[1] <= 'c') ? 'A' - 'a' : 0;
-                    if (str[1] == str[0])
-                        continue;
+                str[1] += (str[1] >= 'a' && str[1] <= 'c') ? 'A' - 'a' : 0;
+                if (str[1] != str[0])
                     return (int)(str[0] - 'A') * 3 + (int)(str[1] - 'A');
-                }
             }
-        }
-        else if (top == 1)
-        {
-            if (str[0] == 'Q' && str[0] == 'q')
-                return 0;
         }
     }
+    else if (top == 1)
+    {
+        if (str[0] == 'Q' && str[0] == 'q')
+        {
+            cct_gotoxy(x_cmd, y_cmd);
+            clear_cmd_buffer(cmd_buffer_size);
+            return -1;
+        }
+    }
+    cct_gotoxy(x_cmd, y_cmd);
+    clear_cmd_buffer(cmd_buffer_size);
+    return 0;
 }
 
 int main()

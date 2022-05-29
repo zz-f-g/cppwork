@@ -18,7 +18,6 @@ using namespace std;
     3、按需加入系统头文件、自定义头文件、命名空间等
 
    ----------------------------------------------------------------------------------- */
-
 int main()
 {
     int n, selection, delay_mode = 0;
@@ -38,76 +37,12 @@ int main()
         }
         if (selection == 0)
             return 0;
-        while (1)
-        {
-            cout << "请输入汉诺塔的层数(1-" << MAXSIZE << ")" << endl;
-            cin >> n;
-            if (cin.fail())
-                cin.clear();
-            else if (n >= 1 && n <= MAXSIZE)
-            {
-                cin.ignore(32767, '\n');
-                break;
-            }
-            cin.ignore(32767, '\n');
-        }
-        while (1)
-        {
-            cout << "请输入起始柱(A-C)" << endl;
-            cin >> src;
-            if (cin.fail())
-                cin.clear();
-            else if (src == 'A' || src == 'B' || src == 'C' || src == 'a' || src == 'b' || src == 'c')
-            {
-                if (src == 'a' || src == 'b' || src == 'c')
-                    src += 'A' - 'a';
-                cin.ignore(32767, '\n');
-                break;
-            }
-            cin.ignore(32767, '\n');
-        }
-        while (1)
-        {
-            cout << "请输入目标柱(A-C)" << endl;
-            cin >> dst;
-            if (cin.fail())
-                cin.clear();
-            else if (dst == 'A' || dst == 'B' || dst == 'C' || dst == 'a' || dst == 'b' || dst == 'c')
-            {
-                if (dst == 'a' || dst == 'b' || dst == 'c')
-                    dst += 'A' - 'a';
-                cin.ignore(32767, '\n');
-                if (dst == src)
-                {
-                    cout << "目标柱(" << src << ")不能与起始柱(" << src << ")相同" << endl;
-                    continue;
-                }
-                break;
-            }
-            cin.ignore(32767, '\n');
-        }
+        get_n(n);
+        get_src(src);
+        get_dst(src, dst);
         tmp = 'A' + 'B' + 'C' - src - dst;
         if (selection == 4 || selection == 8)
-        {
-            while (1)
-            {
-                cout << "请输入移动速度(0-5: 0-按回车单步演示 1-延时最长 5-延时最短)" << endl;
-                cin >> delay_mode;
-                if (cin.fail())
-                    cin.clear();
-                else if (delay_mode >= 0 && delay_mode <= 5)
-                    break;
-                cin.ignore(32767, '\n');
-            }
-        }
-
-        // Variable description
-        // n: number of layers
-        // src: source      cylinder A/B/C
-        // dst: destination cylinder A/B/C
-        // tmp: temporary   cylinder A/B/C
-        // selection: in menu() 0-9
-        // delay_mode: 0-5
+            get_delay(delay_mode);
         switch (selection)
         {
             case 1:

@@ -378,7 +378,8 @@ void clear_cmd_buffer(int len)
 /* input legal command
 - output:
     int command: ternary number, src & dst
-        00(0): Q
+        -1: Q
+        00(0): invalid
         01(1): A -> B
         02(2): A -> C
         10(3): B -> A
@@ -391,57 +392,64 @@ int command_input()
     char ch = '\0';
     int top = 0;
     char str[cmd_buffer_size] = { 0 };
-    while (1)
+    while (ch != '\r')
     {
-        while ('\r' != (ch = _getch()))
+        if (ch <= 32 || ch >= 127)
         {
-            if (ch <= ' ' || ch >= '\b')
-                continue;
-            if (top == cmd_buffer_size)
-            {
-                clear_cmd_buffer(cmd_buffer_size);
-                continue;
-            }
-            str[top++] = ch;
+            ch = _getch();
+            continue;
         }
-        if (top == 2)
+        if (top == cmd_buffer_size)
         {
-            if (str[0] >= 'A' && str[0] <= 'C' || str[0] >= 'a' && str[0] <= 'c')
+            cct_gotoxy(x_cmd, y_cmd);
+            clear_cmd_buffer(cmd_buffer_size);
+            return 0;
+        }
+        putchar(ch);
+        str[top++] = ch;
+        ch = _getch();
+    }
+    if (top == 2)
+    {
+        if (str[0] >= 'A' && str[0] <= 'C' || str[0] >= 'a' && str[0] <= 'c')
+        {
+            str[0] += (str[0] >= 'a' && str[0] <= 'c') ? 'A' - 'a' : 0;
+            if (str[1] >= 'A' && str[1] <= 'C' || str[1] >= 'a' && str[1] <= 'c')
             {
-                str[0] += (str[0] >= 'a' && str[0] <= 'c') ? 'A' - 'a' : 0;
-                if (str[1] >= 'A' && str[1] <= 'C' || str[1] >= 'a' && str[1] <= 'c')
-                {
-                    str[1] += (str[1] >= 'a' && str[1] <= 'c') ? 'A' - 'a' : 0;
-                    if (str[1] == str[0])
-                        continue;
+                str[1] += (str[1] >= 'a' && str[1] <= 'c') ? 'A' - 'a' : 0;
+                if (str[1] != str[0])
                     return (int)(str[0] - 'A') * 3 + (int)(str[1] - 'A');
-                }
             }
-        }
-        else if (top == 1)
-        {
-            if (str[0] == 'Q' && str[0] == 'q')
-                return 0;
         }
     }
+    else if (top == 1)
+    {
+        if (str[0] == 'Q' || str[0] == 'q')
+        {
+            return -1;
+        }
+    }
+    cct_gotoxy(x_cmd, y_cmd);
+    clear_cmd_buffer(cmd_buffer_size);
+    return 0;
 }
 
 int command_execute(int command)
 {
-    if (command == 0)
-        return 0;
     char src = 'A' + (char)(command / 3);
     char dst = 'A' + (char)(command % 3);
-    if (tops[src - 'A'] == '0')
+    if (tops[src - 'A'] == 0)
     {
-        cout << endl << "源柱为空!";
+        cout << endl
+             << "源柱为空!";
         for (int i = 0; i < 4; ++i)
             wait(1);
         cct_gotoxy(0, y_cmd + 1);
         clear_cmd_buffer(cmd_buffer_size);
         clear_cmd_buffer(cmd_buffer_size);
+        return 0;
     }
-    if (state[src - 'A'][tops[src - 'A'] - 1] > state[dst - 'A'][tops[dst - 'A'] - 1])
+    if (tops[dst - 'A'] >= 1 && state[src - 'A'][tops[src - 'A'] - 1] > state[dst - 'A'][tops[dst - 'A'] - 1])
     {
         cout << endl
              << "大盘压小盘，非法移动!";
@@ -450,6 +458,7 @@ int command_execute(int command)
         cct_gotoxy(0, y_cmd + 1);
         clear_cmd_buffer(cmd_buffer_size * 2);
         clear_cmd_buffer(cmd_buffer_size);
+        return 0;
     }
     move_plate(src, dst, 3);
     cout << "第" << setw(4) << cnt << " 步(" << setw(2)
@@ -471,18 +480,24 @@ int is_end(int n, char dst)
 
 void play(int n, char dst)
 {
+    int cmd = 0;
     cct_gotoxy(0, y_cmd);
     cout << "请输入移动的柱号(命令形式：AC=A顶端的盘子移动到C，Q=退出) ：";
     while (!is_end(n, dst))
     {
+        cmd = 0;
         cct_gotoxy(x_cmd, y_cmd);
-        if (command_execute(command_input()))
-            continue;
-        else
+        while (0 == cmd)
         {
-            cout << endl
-                 << "游戏中止！！！！！";
+            cmd = command_input();
+            if (cmd == -1)
+            {
+                cout << endl
+                     << "游戏中止！！！！！";
+                return;
+            }
         }
+        command_execute(cmd);
     }
     cout << endl
          << "游戏结束！！！！！";
@@ -630,7 +645,9 @@ void initial(int n, char src, char tmp, char dst, int selection, int delay_mode)
             init_col_print(n, src, 8);
             init_plates(n, src);
             play(n, dst);
-            cct_gotoxy(0, y_info + y_delta + 8);
+            cout << endl
+                 << endl
+                 << endl;
             break;
         default:
             break;
@@ -647,8 +664,83 @@ void exit_selection(int selection)
     tops[0] = 0;
     tops[1] = 0;
     tops[2] = 0;
-    if (selection > 4)
+    if (selection > 4 && selection < 9)
         cct_gotoxy(0, y_exit + (selection == 8 ? y_delta : 0));
     cout << "按回车键继续";
     wait(0);
 }
+
+void get_n(int &n)
+{
+    while (1)
+    {
+        cout << "请输入汉诺塔的层数(1-" << MAXSIZE << ")" << endl;
+        cin >> n;
+        if (cin.fail())
+            cin.clear();
+        else if (n >= 1 && n <= MAXSIZE)
+        {
+            cin.ignore(32767, '\n');
+            break;
+        }
+        cin.ignore(32767, '\n');
+    }
+}
+
+void get_src(char &src)
+{
+    while (1)
+    {
+        cout << "请输入起始柱(A-C)" << endl;
+        cin >> src;
+        if (cin.fail())
+            cin.clear();
+        else if (src == 'A' || src == 'B' || src == 'C' || src == 'a' || src == 'b' || src == 'c')
+        {
+            if (src == 'a' || src == 'b' || src == 'c')
+                src += 'A' - 'a';
+            cin.ignore(32767, '\n');
+            break;
+        }
+        cin.ignore(32767, '\n');
+    }
+}
+
+void get_dst(char src, char &dst)
+{
+    while (1)
+    {
+        cout << "请输入目标柱(A-C)" << endl;
+        cin >> dst;
+        if (cin.fail())
+            cin.clear();
+        else if (dst == 'A' || dst == 'B' || dst == 'C' || dst == 'a' || dst == 'b' || dst == 'c')
+        {
+            if (dst == 'a' || dst == 'b' || dst == 'c')
+                dst += 'A' - 'a';
+            cin.ignore(32767, '\n');
+            if (dst == src)
+            {
+                cout << "目标柱(" << src << ")不能与起始柱(" << src << ")相同" << endl;
+                continue;
+            }
+            break;
+        }
+        cin.ignore(32767, '\n');
+    }
+}
+
+void get_delay(int &delay_mode)
+{
+    while (1)
+    {
+        cout << "请输入移动速度(0-5: 0-按回车单步演示 1-延时最长 5-延时最短)" << endl;
+        cin >> delay_mode;
+        if (cin.fail())
+            cin.clear();
+        else if (delay_mode >= 0 && delay_mode <= 5)
+            break;
+        cin.ignore(32767, '\n');
+    }
+}
+
