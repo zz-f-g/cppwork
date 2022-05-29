@@ -1,28 +1,23 @@
 /* 2052110 自动化 郭子瞻 */
+
 #include <iostream>
 #include <iomanip>
-#include <conio.h>  //用getch，因此不需要支持Linux
-#include <string.h> //Dev/CB的strlen需要
+#include <cstring>
 using namespace std;
-#define STRSIZE 30
-#define MAXCOMB 20
 
-struct dish
-{
-    char id;
-    char name[STRSIZE];
-    double price;
-    int number;
+struct KFC {
+	char id;
+	const char* name;
+	float price;
 };
 
-struct SPECIAL
-{
-    char ids[MAXCOMB];
-    char name[STRSIZE];
-    double price;
+struct SPECIAL {
+	const char* id;
+	const char* name;
+	float price;
 };
 
-const struct dish list[] = {
+const struct KFC list[] = {
     {'A', "香辣鸡腿堡", 18.5},
     {'B', "劲脆鸡腿堡", 18.5},
     {'C', "新奥尔良烤鸡腿堡", 19},
@@ -59,28 +54,140 @@ const struct SPECIAL special[] = {
     {"JJ", "劲爆鸡米花(2份小)", 12.5},
     {NULL, NULL, 0}};
 
-void print_dish(struct KFC dish)
+void menu(KFC * ptr_K, SPECIAL * ptr_S)
 {
-    cout << setiosflags(ios::left);
-    cout << ' ' << dish.id << ' ' << setw(20) << dish.name << setw(5) << dish.price;
-}
-
-void menu(char *order_str)
-{
+    int newline = 0;
+    system("cls");
     cout << "=============================================================" << endl;
     cout << "                      KFC 2021秋季菜单" << endl;
     cout << "=============================================================" << endl;
+    cout << setiosflags(ios::left);
+    while (ptr_K->id != 0)
+    {
+        cout << " " << ptr_K->id << " " << setw(21) << ptr_K->name << setw(5) << ptr_K->price
+             << (newline ? "\n" : " | ");
+        newline = !newline;
+        ptr_K++;
+    }
+    cout << "【优惠信息】：" << endl
+         << endl;
+    while (ptr_S->id)
+    {
+        cout << ptr_S->name << "=";
+        for (unsigned int i = 0; i < strlen(ptr_S->id); i++)
+        {
+            cout << "+" << name_info[ptr_S->id[i] - 'A'];
+        }
+        cout << "=" << ptr_S->price;
+        cout << endl;
+        ptr_S++;
+    }
+
+    cout << "\n【输入规则说明】：\n";
+    cout << "ANV=香辣鸡腿堡+薯条(小)+百事可乐(小) / akaak=香辣鸡腿堡*3+香辣鸡翅*2" << endl;
+    cout << "字母不分大小写，不限顺序，单独输入0则退出程序" << endl;
+    cout << endl;
+    cout << "请点单：";
 }
 
 int main()
 {
-    int ifctn = 1;
-    char order_str[MAXCOMB];
-    while (ifctn)
-    {
-        system("cls");
-        system("mode con cols=120 lines=35");
-        menu(order_str);
-    }
-    return 0;
+	const KFC* kp = list;
+	const SPECIAL* sp = special;
+	system("mode con cols=120 lines=35");
+	char a[1000];
+	char name_info[26][100] = { 0 };
+
+    while (kp->id != 0) {
+		strcpy(name_info[kp->id - 'A'],kp->name);
+		kp++;
+	}
+
+	while (1) {
+		kp = list;
+		sp = special;
+        menu(list, special);
+
+        a[0] = 0;
+        cin >> a;
+		if (a[0] == '0')
+			break;
+
+		char* p = a;
+		int diandan[26], diandan_ori[26];
+		float price = 0;
+		for (int i = 0; i < 26; i++) {
+			diandan_ori[i] = diandan[i] = 0;
+		}
+
+		while (*p != 0) {
+			if (*p >= 'a' && *p <= 'z') {
+				*p -= 0x20;
+			}
+
+			diandan_ori[*p - 'A'] = ++diandan[*p - 'A'];
+			p++;
+		}
+
+
+		kp = list;
+		sp = special;
+
+
+		while (sp->id != NULL) {
+			while (1) {
+				bool flag = true;
+				for (unsigned int i = 0; i < strlen(sp->id); i++) {
+					diandan[sp->id[i] - 'A']--;
+				}
+
+				for (int i = 0; i < 26; i++) {
+					if (diandan[i] < 0) {
+						flag = false;
+					}
+				}
+
+				if (flag == true) {
+					price += sp->price;
+				}
+				else {
+					for (unsigned int i = 0; i < strlen(sp->id); i++) {
+						diandan[sp->id[i] - 'A']++;
+					}
+					break;
+				}
+			}
+			sp++;
+		}
+
+		while (kp->id != 0) {
+			while (1) {
+				if (diandan[kp->id - 'A'] > 0) {
+					diandan[kp->id - 'A']--;
+					price += kp->price;
+				}
+				else {
+					break;
+				}
+			}
+			kp++;
+		}
+
+		cout << "您的点餐=";
+		for (int i = 0; i < 26; i++) {
+			if (diandan_ori[i] != 0) {
+				if (diandan[i] == 1) {
+					cout << "+" << name_info[i];
+				}
+				else {
+					cout <<"+"<<name_info[i] << "*" << diandan_ori[i];
+				}
+			}
+		}
+		cout << endl;
+		cout << "共计：" << price << "元" << endl;
+
+		cout << "点餐完成，按任意键继续" << endl;
+		system("pause");
+	}
 }

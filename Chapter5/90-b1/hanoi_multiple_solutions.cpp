@@ -20,6 +20,11 @@ using namespace std;
 #define width_half_pedestal 11
 #define width_interval 32
 
+/* macros in menu 9 */
+#define cmd_buffer_size 19
+#define x_cmd 60
+#define y_cmd y_info + y_delta + 4
+
 /* ----------------------------------------------------------------------------------
 
      本文件功能：
@@ -181,19 +186,19 @@ void wait(int delay_mode)
         switch (delay_mode)
         {
             case 1:
-                delay = 100;
+                delay = 500;
                 break;
             case 2:
-                delay = 50;
+                delay = 100;
                 break;
             case 3:
-                delay = 10;
+                delay = 50;
                 break;
             case 4:
-                delay = 5;
+                delay = 10;
                 break;
             case 5:
-                delay = 1;
+                delay = 5;
                 break;
             default:
                 break;
@@ -207,10 +212,12 @@ void wait(int delay_mode)
     }
 }
 
-/* functions for menu5 & menu6
+/* functions for menu5, 6, 7, 8
 init_cylinders
 draw_plate
 init_plates
+move_plate_bystep
+move_plate
 */
 
 /* initialize the 3 cylinders
@@ -353,6 +360,134 @@ void move_plate(char src, char dst, int delay_mode)
     cct_gotoxy(0, y_info + y_delta);
 }
 
+/* functions for menu9
+clear_cmd_buffer
+command_input
+command_execute
+is_end
+play
+*/
+
+void clear_cmd_buffer(int len)
+{
+    for (int i = 0; i < len; ++i)
+        putchar(' ');
+    cct_gotoxy(x_cmd, y_cmd);
+}
+
+/* input legal command
+- output:
+    int command: ternary number, src & dst
+        00(0): Q
+        01(1): A -> B
+        02(2): A -> C
+        10(3): B -> A
+        12(5): B -> C
+        20(6): C -> A
+        21(7): C -> B
+*/
+int command_input()
+{
+    char ch = '\0';
+    int top = 0;
+    char str[cmd_buffer_size] = { 0 };
+    while (1)
+    {
+        while ('\r' != (ch = _getch()))
+        {
+            if (ch <= ' ' || ch >= '\b')
+                continue;
+            if (top == cmd_buffer_size)
+            {
+                clear_cmd_buffer(cmd_buffer_size);
+                continue;
+            }
+            str[top++] = ch;
+        }
+        if (top == 2)
+        {
+            if (str[0] >= 'A' && str[0] <= 'C' || str[0] >= 'a' && str[0] <= 'c')
+            {
+                str[0] += (str[0] >= 'a' && str[0] <= 'c') ? 'A' - 'a' : 0;
+                if (str[1] >= 'A' && str[1] <= 'C' || str[1] >= 'a' && str[1] <= 'c')
+                {
+                    str[1] += (str[1] >= 'a' && str[1] <= 'c') ? 'A' - 'a' : 0;
+                    if (str[1] == str[0])
+                        continue;
+                    return (int)(str[0] - 'A') * 3 + (int)(str[1] - 'A');
+                }
+            }
+        }
+        else if (top == 1)
+        {
+            if (str[0] == 'Q' && str[0] == 'q')
+                return 0;
+        }
+    }
+}
+
+int command_execute(int command)
+{
+    if (command == 0)
+        return 0;
+    char src = 'A' + (char)(command / 3);
+    char dst = 'A' + (char)(command % 3);
+    if (tops[src - 'A'] == '0')
+    {
+        cout << endl << "源柱为空!";
+        for (int i = 0; i < 4; ++i)
+            wait(1);
+        cct_gotoxy(0, y_cmd + 1);
+        clear_cmd_buffer(cmd_buffer_size);
+        clear_cmd_buffer(cmd_buffer_size);
+    }
+    if (state[src - 'A'][tops[src - 'A'] - 1] > state[dst - 'A'][tops[dst - 'A'] - 1])
+    {
+        cout << endl
+             << "大盘压小盘，非法移动!";
+        for (int i = 0; i < 4; ++i)
+            wait(1);
+        cct_gotoxy(0, y_cmd + 1);
+        clear_cmd_buffer(cmd_buffer_size * 2);
+        clear_cmd_buffer(cmd_buffer_size);
+    }
+    move_plate(src, dst, 3);
+    cout << "第" << setw(4) << cnt << " 步(" << setw(2)
+         << state[src - 'A'][tops[src - 'A'] - 1] << "): "
+         << src << "-->" << dst;
+    move_state(src, dst);
+    print_row_state();
+    move_col_print(src, dst, 8);
+    cct_gotoxy(x_cmd, y_cmd);
+    clear_cmd_buffer(cmd_buffer_size);
+    ++cnt;
+    return 1;
+}
+
+int is_end(int n, char dst)
+{
+    return (tops[dst - 'A'] == n);
+}
+
+void play(int n, char dst)
+{
+    cct_gotoxy(0, y_cmd);
+    cout << "请输入移动的柱号(命令形式：AC=A顶端的盘子移动到C，Q=退出) ：";
+    while (!is_end(n, dst))
+    {
+        cct_gotoxy(x_cmd, y_cmd);
+        if (command_execute(command_input()))
+            continue;
+        else
+        {
+            cout << endl
+                 << "游戏中止！！！！！";
+        }
+    }
+    cout << endl
+         << "游戏结束！！！！！";
+}
+
 /* recursion function and its subsidary
 action_step
 hanoi_recur
@@ -394,7 +529,6 @@ void action_step(int n, char src, char dst, int selection, int delay_mode)
             cct_gotoxy(0, y_info + 4);
             break;
         case 8:
-            cct_gotoxy(0, y_info + y_delta);
             wait(delay_mode);
             move_plate(src, dst, delay_mode);
             move_state(src, dst);
@@ -486,8 +620,18 @@ void initial(int n, char src, char tmp, char dst, int selection, int delay_mode)
             cout << "延时设置为 " << delay_mode << endl;
             init_col_print(n, src, 8);
             init_plates(n, src);
+            wait(1);
             break;
         case 9:
+            cct_cls();
+            init_state(n, src);
+            init_cylinders();
+            cout << "从 " << src << " 移动到 " << dst << "，共 " << n << " 层" << endl;
+            init_col_print(n, src, 8);
+            init_plates(n, src);
+            play(n, dst);
+            cct_gotoxy(0, y_info + y_delta + 8);
+            break;
         default:
             break;
     };
