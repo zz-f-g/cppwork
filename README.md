@@ -67,3 +67,7 @@ I put my programming homework in Spring semester 2022 in this repo.
 
 - [Chapter7/7-b1/Readme-7-b1](Chapter7/7-b1/Readme-7-b1.md) 秒转日期
 - [Chapter7/7-b2/Readme-7-b2](Chapter7/7-b2/Readme-7-b2.md) KFC 点餐系统
+
+## Chapter9
+
+- [Chapter9/9-b1/Readme-9-b1](Chapter9/9-b1/Readme-9-b1.md)

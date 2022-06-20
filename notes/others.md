@@ -2,19 +2,6 @@
 
 ---
 
-## 输入输出重定向和管道运算符
-
----
-
-默认设备
-
-- 输入：键盘
-- 输出：显示器
-
-如果更改，称为重定向（redirect）。
-
----
-
 ## 问题
 
 定义一个宏，求两个数中的[最大数](https://www.zhihu.com/search?q=%E6%9C%80%E5%A4%A7%E6%95%B0&search_source=Entity&hybrid_search_source=Entity&hybrid_search_extra=%7B%22sourceType%22%3A%22answer%22%2C%22sourceId%22%3A660997629%7D)
