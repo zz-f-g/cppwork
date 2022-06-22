@@ -1,24 +1,29 @@
-/* 学号 姓名 班级 */
+/* 2052110 郭子瞻 自动化 */
 #include <iostream>
 #include <cmath>
 using namespace std;
 
-class point {
+class point
+{
 private:
-	int x;
-	int y;
-	//除上面的两个private数据成员外，不再允许添加任何类型的数据成员
+    int x;
+    int y;
+    //除上面的两个private数据成员外，不再允许添加任何类型的数据成员
 public:
-	int getx() const
-	{
-		return x;
-	}
-	int gety() const
-	{
-		return y;
-	}
-	/* 可以定义需要的成员函数，数量不限，并以体内方式实现，不允许添加数据成员 */
-
+    int getx() const
+    {
+        return x;
+    }
+    int gety() const
+    {
+        return y;
+    }
+    /* 可以定义需要的成员函数，数量不限，并以体内方式实现，不允许添加数据成员 */
+    void set(int x_in, int y_in)
+    {
+        x = x_in;
+        y = y_in;
+    }
 };
 
 class triangle {
@@ -31,6 +36,13 @@ public:
 	/* 根据需要补充相应的语句后完成area函数(形参为空，不准改)，要求：如果三点能构成三角形，则返回面积，否则返回 -1 */
 	double area()
 	{
+        int parallelogram_area = cross_product(p1, p2) + cross_product(p2, p3) + cross_product(p3, p1);
+        if (parallelogram_area > 0)
+            return double(parallelogram_area) / 2.0;
+        else if (parallelogram_area < 0)
+            return double(-parallelogram_area) / 2.0;
+        else
+            return -1;
 	}
 	/* 构造函数 */
 	triangle(int p1_x, int p1_y, int p2_x, int p2_y, int p3_x, int p3_y)
@@ -41,7 +53,10 @@ public:
 		p3.set(p3_x, p3_y);
 	}
 	/* 可以定义需要的成员函数，数量不限，并以体内方式实现，不允许添加数据成员 */
-
+    int cross_product(point vec1, point vec2)
+    {
+        return vec1.getx() * vec2.gety() - vec1.gety() * vec2.getx();
+    }
 };
 
 /***************************************************************************

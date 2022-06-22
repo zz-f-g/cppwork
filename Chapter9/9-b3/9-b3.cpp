@@ -1,9 +1,11 @@
-/* 学号 姓名 班级 */
+/* 2052110 郭子瞻 自动化 */
 #include <iostream>
 #include <conio.h>
 using namespace std;
 
 /* --- 如果有需要的宏定义、只读全局变量等，写于此处 --- */
+#define START 1900
+#define END 2099
 
 /* --- 如果有其它全局函数需要声明，写于此处 --- */
 
@@ -14,15 +16,151 @@ private:
 	int month;
 	int day;
 	/* 不允许添加数据成员 */
-
+    void illegal_manage(int * p, int y, int m, int d);
+    int isleap(int y);
+    int get_day(int year, int month, int day);
 public:
 	/* 根据需要定义所需的成员函数、友元函数等(不允许添加数据成员) */
-
+    Date();
+    Date(int day_from_beg);
+    Date(int y, int m, int d);
+    void set(int y);
+    void set(int y, int m);
+    void set(int y, int m, int d);
+    void get(int &y, int &m, int &d);
+    void show();
 };
 
 /* --- 给出 Date 类的所有成员函数的体外实现 --- */
+int Date::isleap(int y)
+{
+    return (y % 4 == 0) && (y % 100 != 0) || (y % 400 == 0);
+}
 
+void Date::illegal_manage(int * p, int y, int m, int d)
+{
+    if (y < START || y > END)
+        y = 2000;
+    const int day_in_month[13] = {
+        0, 31, 28 + isleap(y), 31, 30, 31, 30,
+        31, 31, 30, 31, 30, 31};
+    if (m < 1 || m > 12)
+        m = 1;
+    if (d < 1 || d > day_in_month[m])
+        d = 1;
+    *(p++) = y;
+    *(p++) = m;
+    *(p++) = d;
+}
 
+int Date::get_day(int year, int month, int day)
+{
+    const int day_in_month[13] = {0, 31, 28 + isleap(year), 
+    31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    int res = 0;
+    for (int i = START; i < year; ++i)
+        res += 365 + isleap(i);
+    for (int i = 1; i < month; ++i)
+        res += day_in_month[i];
+    return (res += day - 1);
+}
+
+Date::Date()
+{
+    this->year = 2000;
+    this->month = 1;
+    this->day = 1;
+}
+
+Date::Date(int day_from_beg) // ???
+{
+    if (day_from_beg <= 0)
+    {
+        this->year = START;
+        this->month = 1;
+        this->day = 1;
+    }
+    else if (day_from_beg > get_day(END, 12, 31))
+    {
+        this->year = END;
+        this->month = 12;
+        this->day = 31;
+    }
+    else
+    {
+        int y = day_from_beg / 366 + START;
+        int m = 1, d;
+        int date_info[3] = {0};
+        while (get_day(y, 1, 1) <= day_from_beg)
+            ++y;
+        --y;
+        while (get_day(y, m, 1) <= day_from_beg)
+            ++m;
+        --m;
+        d = day_from_beg - get_day(y, m, 1);
+        illegal_manage(date_info, y, m, d);
+        this->year = date_info[0];
+        this->month = date_info[1];
+        this->day = date_info[2];
+    }
+}
+
+Date::Date(int y, int m, int d)
+{
+    int date_info[3] = {0};
+    illegal_manage(date_info, y, m, d);
+    this->year = date_info[0];
+    this->month = date_info[1];
+    this->day = date_info[2];
+}
+
+void Date::set(int y)
+{
+    if (y == 0)
+        y = this->year;
+    int date_info[3] = {0};
+    illegal_manage(date_info, y, 1, 1);
+    this->year = date_info[0];
+}
+
+void Date::set(int y, int m)
+{
+    if (y == 0)
+        y = this->year;
+    if (m == 0)
+        m = this->month;
+    int date_info[3] = {0};
+    illegal_manage(date_info, y, m, 1);
+    this->year = date_info[0];
+    this->month = date_info[1];
+}
+
+void Date::set(int y, int m, int d)
+{
+    if (y == 0)
+        y = this->year;
+    if (m == 0)
+        m = this->month;
+    if (d == 0)
+        d = this->day;
+    int date_info[3] = {0};
+    illegal_manage(date_info, y, m, d);
+    this->year = date_info[0];
+    this->month = date_info[1];
+    this->day = date_info[2];
+}
+
+void Date::get(int &y, int &m, int &d)
+{
+    y = this->year;
+    m = this->month;
+    d = this->day;
+}
+
+void Date::show()
+{
+    cout << this->year << '.' << this->month << '.' << this->day << endl;
+}
 /* --- 如果有需要的其它全局函数的实现，可以写于此处 --- */
 
 
@@ -149,7 +287,7 @@ int main()
 		cout << "测试set，带缺省值" << endl;
 		cout << "=================" << endl;
 
-		d1.set(2022, 6, 17);	//2022.6.10
+		d1.set(2022, 6, 10);	//2022.6.10
 		d2.set(2022, 6);		//2022.6.1
 		d3.set(2022);			//2022.1.1
 
@@ -189,8 +327,8 @@ int main()
 		d5.set(1899, 2, 29);  //2000.2.29
 		d6.set(1899, 2, 30);  //2000.2.1
 		d7.set(1899, 2, 0);   //2000.2.1
-		d8.set(0, 2, 0);      //2000.2.1
-		d9.set(0, 13, 32);    //2000.1.1
+		d8.set(0, 2, 0);      //2020.2.1
+		d9.set(0, 13, 32);    //2020.1.1
 		d10.set(1899, 13, 31);  //2000.1.31
 		d11.set(1899, 13, 32);  //2000.1.1
 		cout << "d5应该是2000.2.29， 实际为：";
@@ -199,9 +337,9 @@ int main()
 		d6.show();
 		cout << "d7应该是2000.2.1，  实际为：";
 		d7.show();
-		cout << "d8应该是2000.2.1，  实际为：";
+		cout << "d8应该是2020.2.1，  实际为：";
 		d8.show();
-		cout << "d9应该是2000.1.1，  实际为：";
+		cout << "d9应该是2020.1.1，  实际为：";
 		d9.show();
 		cout << "d10应该是2000.1.31，实际为：";
 		d10.show();
